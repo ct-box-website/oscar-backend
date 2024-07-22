@@ -1,16 +1,12 @@
 <?php
 session_start();
 $path = $_SERVER['REQUEST_URI'];
-if (isset($_POST['username']) && isset($_POST['password'])) {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $_SESSION['username'] = $username;
-  $_SESSION['password'] = $password;
-}
-if (!isset($_SESSION['username']) && !isset($_SESSION['password'])) {
+
+if (!isset($_SESSION['username']) && !isset($_SESSION['loggedin'])) {
   header("location: {$path}login.php");
   die();
-} ?>
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,6 +33,27 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['password'])) {
       active: function () {
         sessionStorage.fonts = true;
       },
+    });
+  </script>
+
+  <!-- Pusher -->
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    // Initialize pusher with your app's key
+    var pusher = new Pusher('e760aea9751a1d7d3e85', {
+      cluster: 'ap1'
+    });
+
+    /**
+     * Getting the data from pusher
+     */
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function (data) {
+      alert(JSON.stringify(data));
     });
   </script>
 
@@ -305,29 +322,33 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['password'])) {
               </li>
 
               <li class="nav-item topbar-user dropdown hidden-caret">
+
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                   <div class="avatar-sm">
                     <img src="assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
                   </div>
                   <span class="profile-username">
                     <span class="op-7">Hi,</span>
-                    <span class="fw-bold">Hizrian</span>
+                    <span class="fw-bold" style="text-transform: capitalize;"><?php echo $_SESSION["username"] ?></span>
                   </span>
                 </a>
+
                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                   <div class="dropdown-user-scroll scrollbar-outer">
+
                     <li>
                       <div class="user-box">
                         <div class="avatar-lg">
                           <img src="assets/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
                         </div>
                         <div class="u-text">
-                          <h4>Hizrian</h4>
-                          <p class="text-muted">hello@example.com</p>
+                          <h4 style="text-transform: capitalize;"><?php echo $_SESSION['username'] ?></h4>
+                          <p class="text-muted"><?php echo $_SESSION['username'] ?>@email.com</p>
                           <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                         </div>
                       </div>
                     </li>
+
                     <li>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">My Profile</a>
@@ -336,7 +357,7 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['password'])) {
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">Account Setting</a>
                       <div class="dropdown-divider"></div>
-                      <form action="login.php" methods="get">
+                      <form action="processer.php" methods="get">
                         <button type="submit" class="dropdown-item" href="#">Logout</button>
                       </form>
                     </li>

@@ -2,7 +2,10 @@
 
 session_start();
 
-session_destroy();
+if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
+    header("location: {$path}index.php");
+    die();
+}
 ?>
 
 
@@ -68,7 +71,8 @@ session_destroy();
 </head>
 
 <body>
-    <div class="container d-flex align-items-center justify-content-center" style="height: 100dvh;">
+    <div class="container d-flex align-items-center justify-content-center"
+        style="height: 100dvh; position: relative; ">
         <form action="" id="formControl" method="POST">
             <div class="d-flex flex-column gap-4"
                 style="width: 500px; padding: 36px; padding-top: 140px; border-radius: 10px; background-color: #F9F9F9; box-shadow: 0 0 25px rgba(0, 0, 0, 0.15); position: relative; overflow: hidden;">
@@ -99,47 +103,53 @@ session_destroy();
 
             </div>
         </form>
-        <script>
-            document.getElementById("formControl").addEventListener('submit', async function (event) {
-                event.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-
-                const url = 'http://192.168.1.5/assignment/oscar-backend/_backend/api/user/read.php';
-
-                const options = {
-                    method: 'POST',
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                };
-
-                try {
-                    const response = await fetch(url, options);
-                    const data = await response.json();
-                    const user = data.data.find(user => user.username === username && user.password === password);
-                    if (user) {
-                        // localStorage.setItem('token', data.data.token);
-                        console.log("Successfully logged in");
-                        window.location.replace('http://192.168.1.5/assignment/oscar-backend/index.php')
-                    } else {
-                        alert('Invalid Credentials');
-                    }
-                    return data;
-                } catch (error) {
-                    console.error(error);
-                }
-
-            })
-        </script>
-
         <?php
 
+
+
         if (isset($_POST['username']) && isset($_POST['password'])) {
+
+            // State management
+            $toast = false;
+            $msg = "";
             $username = $_POST['username'];
             $password = $_POST['password'];
-            $_SESSION['username'] = $username;
-            $_SESSION['password'] = $password;
+
+            // $apiUrl = "http://192.168.1.5/assignment/oscar-backend/_backend/api/user/read.php";
+            $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/read.php";
+            $data = file_get_contents($apiUrl);
+            $userData = json_decode($data, true);
+            $user = null;
+            foreach ($userData['data'] as $u) {
+                if ($u["username"] === $username) {
+                    $user = $u;
+                    break;
+                }
+            }
+            if ($user) {
+                if ($user["password"] === (string) $password) {
+                    $msg = "Logged in successfully. Redirecting... 4 second";
+                    $toast = true;
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['username'] = $user["username"];
+                    sleep(2);
+                    header("Location: http://localhost/assignment/oscar-backend/index.php");
+                } else {
+                    $msg = "Password Incorrect. Please try again. 1 second";
+                    $toast = true;
+                }
+
+            } else {
+                $toast = true;
+            }
+        } else {
+            $msg = "Please fill out all fields. 4 second";
+            $toast = true;
         }
+        ?>
+        <?php
+
+        include "./components/ui/toast.php";
         ?>
         <!-- console.log(data);
                 if (data.status === 200) {
