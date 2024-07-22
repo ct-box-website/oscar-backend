@@ -28,6 +28,8 @@ if (isset($_POST["id"])) {
                 "password" => $user->password,
                 "email" => $user->email,
                 "address" => $user->address,
+                'status' => $user->status,
+                'avatar' => $user->avatar
             ];
 
             $data = [

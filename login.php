@@ -115,7 +115,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
-            // $apiUrl = "http://192.168.1.5/assignment/oscar-backend/_backend/api/user/read.php";
+            // $apiUrl = "http://172.10.2.77/assignment/oscar-backend/_backend/api/user/read.php";
             $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/read.php";
             $data = file_get_contents($apiUrl);
             $userData = json_decode($data, true);
@@ -132,6 +132,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
                     $toast = true;
                     $_SESSION['loggedin'] = true;
                     $_SESSION['username'] = $user["username"];
+                    $_SESSION['id'] = $user["id"];
+
                     sleep(2);
                     header("Location: http://localhost/assignment/oscar-backend/index.php");
                 } else {
@@ -151,6 +153,10 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
 
         include "./components/ui/toast.php";
         ?>
+        <!-- <script>
+            localStorage.setItem('username', '<?php echo $_SESSION['username']; ?>');
+            localStorage.setItem('loggedin', '<?php echo $_SESSION['loggedin']; ?>');
+        </script> -->
         <!-- console.log(data);
                 if (data.status === 200) {
                     localStorage.setItem('token', data.data.token);

@@ -1,0 +1,116 @@
+.input {
+    padding: 16px;
+    border: none;
+    padding-left: 16px;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: #888;
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.12);
+
+    &::placeholder {
+        color: #ccc;
+        font-weight: 400;
+    }
+}
+
+.inputdate {
+    padding: 16px;
+    border: none;
+    padding-left: 16px;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: #ccc;
+    font-weight: 400;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.12);
+    flex: 1;
+    &::placeholder {
+        color: #ccc;
+        font-weight: 400;
+    }
+}
+.inputselect {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 16px;
+    border: none;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: #ccc;
+    font-weight: 400;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.12);
+    flex: 1;
+    &::placeholder {
+        color: #ccc;
+        font-weight: 400;
+    }
+}
+
+.button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1572E8;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #1059C6;
+        scale: 1.01;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: scale(0.98);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.01);
+
+    }
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+body {
+    background-image: url("https://afar.brightspotcdn.com/dims4/default/ad5a76f/2147483647/strip/true/crop/1000x637+0+0/resize/1440x917!/quality/90/?url=https%3A%2F%2Fk3-prod-afar-media.s3.us-west-2.amazonaws.com%2Fbrightspot%2F7e%2F18%2F203e24c54a25880e3e516907e065%2Fshutterstock-1455531734.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    backdrop-filter: brightness(60%);
+    backdrop-filter: blur(8px);
+}
+
+.divider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 580px;
+    flex-direction: row;
+    background-color: #F9F9F9;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.checkinout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 16px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+    color: #cccccc;
+    opacity: 0.8;
+}

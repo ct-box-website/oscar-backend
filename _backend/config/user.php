@@ -30,6 +30,8 @@ class User
         $this->password = $row["password"];
         $this->email = $row["email"];
         $this->address = $row["address"];
+        $this->status = $row["status"];
+        $this->avatar = $row["avatar"];
     }
 
     public function error404($message)
@@ -50,6 +52,7 @@ class User
         $password = htmlspecialchars($input["password"]);
         $email = htmlspecialchars($input["email"]);
         $address = htmlspecialchars($input["address"]);
+        $status = htmlspecialchars($input["status"]);
 
         if (empty(trim($username))) {
             return $this->error404("Please enter number");
@@ -57,25 +60,60 @@ class User
             return $this->error404("Please enter password");
         } else {
             try {
-                $query = "INSERT INTO users (username, password, email, address) VALUES (?, ?, ?, ?)";
-                $stmt = $this->connection->prepare($query);
-                $stmt->execute([$username, $password, $email, $address]);
 
-                $data = [
-                    "code" => 1,
-                    "status" => 201,
-                    "msg" => "User Created Successfully!",
-                    'data' => [
-                        "id" => $this->connection->lastInsertId(),
-                        'username' => $username,
-                        'password' => $password,
-                        'email' => $email,
-                        'address' => $address
-                    ]
-                ];
-                http_response_code(201); // Set HTTP response code
+                if ($_FILES["avatar"]["error"] === 4) {
+                    # Image does not exist
+                } else {
+                    $fileName = $_FILES['avatar']['name'];
+                    $fileSize = $_FILES['avatar']['size'];
+                    $tmpName = $_FILES['avatar']['tmp_name'];
+                    $folder = __DIR__ . '/avatar/';
 
-                return json_encode($data, JSON_PRETTY_PRINT);
+                    $validImagesExtension = ['jpg', 'jpeg', 'png'];
+
+                    $imagesExtension = explode('.', $fileName);
+                    $imagesExtension = strtolower(end($imagesExtension));
+
+                    if (!in_array($imagesExtension, $validImagesExtension)) {
+                        #Images not support
+                    } else {
+
+                        $newImageName = uniqid();
+                        $newImageName .= '.' . $imagesExtension;
+
+                        if (!is_dir($folder)) {
+                            mkdir($folder, 0777, true);
+                        }
+
+                        $uploadFile = $folder . basename($newImageName);
+
+                        move_uploaded_file($tmpName, $uploadFile);
+                        $avatar = $newImageName;
+                        $query = "INSERT INTO users (username, password, email, address, status, avatar) VALUES (?, ?, ?, ?, ?, ?)";
+                        $stmt = $this->connection->prepare($query);
+                        $stmt->execute([$username, $password, $email, $address, $status, $avatar]);
+
+                        $data = [
+                            "code" => 1,
+                            "status" => 201,
+                            "msg" => "User Created Successfully!",
+                            'data' => [
+                                "id" => $this->connection->lastInsertId(),
+                                'username' => $username,
+                                'password' => $password,
+                                'email' => $email,
+                                'address' => $address,
+                                'status' => $status,
+                                'avatar' => $avatar
+                            ]
+                        ];
+                        http_response_code(201); // Set HTTP response code
+
+                        return json_encode($data, JSON_PRETTY_PRINT);
+
+
+                    }
+                }
 
             } catch (PDOException $e) {
                 $data = [
@@ -96,6 +134,7 @@ class User
         $username = htmlspecialchars($input["username"]);
         $email = htmlspecialchars($input["email"]);
         $address = htmlspecialchars($input["address"]);
+        $status = htmlspecialchars($input["status"]);
 
         if (empty(trim($username))) {
             return $this->error404("Please enter a username");
@@ -105,24 +144,61 @@ class User
             return $this->error404("Please enter an address");
         } else {
             try {
-                $query = "UPDATE users SET username = ?, email = ?, address = ? WHERE id = ?";
-                $stmt = $this->connection->prepare($query);
-                $stmt->execute([$username, $email, $address, $user_id]);
+                // $avatar = null;
+                if ($_FILES["avatar"]["error"] === 4) {
+                    # Image does not exist
+                } else {
+                    $fileName = $_FILES['avatar']['name'];
+                    $fileSize = $_FILES['avatar']['size'];
+                    $tmpName = $_FILES['avatar']['tmp_name'];
+                    $folder = __DIR__ . '/avatar/';
 
-                $data = [
-                    "code" => 1,
-                    "status" => 201,
-                    "msg" => "User Updated Successfully!",
-                    'data' => [
-                        'id' => $user_id,
-                        'username' => $username,
-                        'email' => $email,
-                        'address' => $address
-                    ]
-                ];
-                http_response_code(201); // Set HTTP response code
+                    $validImagesExtension = ['jpg', 'jpeg', 'png'];
 
-                return json_encode($data, JSON_PRETTY_PRINT);
+                    $imagesExtension = explode('.', $fileName);
+                    $imagesExtension = strtolower(end($imagesExtension));
+
+                    if (!in_array($imagesExtension, $validImagesExtension)) {
+                        #Images not support
+                    } else {
+
+                        $newImageName = uniqid();
+                        $newImageName .= '.' . $imagesExtension;
+
+                        if (!is_dir($folder)) {
+                            mkdir($folder, 0777, true);
+                        }
+
+                        $uploadFile = $folder . basename($newImageName);
+
+                        move_uploaded_file($tmpName, $uploadFile);
+                        $avatar = $newImageName;
+
+
+
+                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ? WHERE id = ?";
+                        $stmt = $this->connection->prepare($query);
+                        $stmt->execute([$username, $email, $address, $status, $avatar, $user_id]);
+
+                        $data = [
+                            "code" => 1,
+                            "status" => 201,
+                            "msg" => "User Updated Successfully!",
+                            'data' => [
+                                'id' => $user_id,
+                                'username' => $username,
+                                'email' => $email,
+                                'address' => $address,
+                                'status' => $status,
+                                'avatar' => $avatar,
+                            ]
+                        ];
+                        http_response_code(201); // Set HTTP response code
+
+                        return json_encode($data, JSON_PRETTY_PRINT);
+
+                    }
+                }
 
             } catch (PDOException $e) {
                 $data = [

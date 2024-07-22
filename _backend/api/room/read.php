@@ -8,8 +8,8 @@ header("Content-Type: application/json");
 
 include_once "../../config/init.php";
 
-$user = new User($db);
-$result = $user->read();
+$user = new Room($db);
+$result = $user->readRoom();
 $num = $result->rowCount();
 
 if ($num > 0) {
@@ -24,12 +24,16 @@ if ($num > 0) {
         extract($row);
         $data = [
             'id' => $id,
-            'username' => $username,
-            'password' => $password,
-            'email' => $email,
-            'address' => $address,
+            'title' => $title,
+            'description' => $description,
+            'category_id' => $category_id,
+            'price' => $price,
             'status' => $status,
-            'avatar' => $avatar
+            'scale' => $scale,
+            'images' => $images,
+            'category_name' => $category_name,
+            'created_at' => $created_at,
+            'updated_at' => $updated_at,
         ];
         array_push($users['data'], $data);
     }
@@ -39,7 +43,7 @@ if ($num > 0) {
     $users = [
         'code' => 0,
         'status' => 404,
-        'msg' => "Get All Users Unsuccessfully!",
+        'msg' => "Get All Room Unsuccessfully!",
         'data' => null
     ];
     header("HTTP/1.0 404 User Not Found");

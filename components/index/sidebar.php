@@ -1,3 +1,8 @@
+<?php
+$url = $_SERVER['REQUEST_URI'];
+$uri = substr($url, strrpos($url, '/') + 1);
+?>
+
 <script src="https://kit.fontawesome.com/83db4bf7c9.js" crossorigin="anonymous"></script>
 <div class="sidebar" data-background-color="dark">
 
@@ -32,9 +37,9 @@
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
 
-                <li class="nav-item active">
+                <li class="nav-item <?php echo $uri === 'index.php' ? "active" : "" ?>">
 
-                    <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
+                    <a href="index.php" class="collapsed" aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
                         <!-- <span class="caret"></span> -->
@@ -59,7 +64,8 @@
                     <h4 class="text-section">Contents</h4>
                 </li>
 
-                <li class="nav-item">
+                <li
+                    class="nav-item <?php echo ($uri === 'user.php' || $uri === 'employee.php' || $uri === 'attendance.php') ? "active" : "" ?> ">
 
 
                     <a data-bs-toggle="collapse" href="#base">
@@ -72,23 +78,23 @@
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
                             <li>
+                                <!-- <a href="components/buttons.html">
+                                    <span class="sub-item">Buttons</span>
+                                </a> -->
+                                <a href="user.php">
+                                    <span class="sub-item">User</span>
+                                </a>
+                            </li>
+                            <li>
                                 <!-- <a href="components/avatars.html">
                                     <span class="sub-item">Avatars</span>
                                 </a> -->
-                                <a href="pages/employee.php">
+                                <a href="employee.php">
                                     <span class="sub-item">Employees</span>
                                 </a>
                             </li>
                             <li>
-                                <!-- <a href="components/buttons.html">
-                                    <span class="sub-item">Buttons</span>
-                                </a> -->
-                                <a href="pages/admin.html">
-                                    <span class="sub-item">Admin</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="components/gridsystem.html">
+                                <a href="attendance.php">
                                     <span class="sub-item">Attendance</span>
                                 </a>
                             </li>
