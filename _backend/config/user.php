@@ -225,6 +225,52 @@ class User
         }
     }
 
+    public function disableUser($input)
+    {
+        $user_id = htmlspecialchars($input["id"]);
+
+        if ($user_id != "") {
+            try {
+
+                $status = 0;
+                $query = "UPDATE users SET status = '$status' WHERE id = ?";
+                $stmt = $this->connection->prepare($query);
+                $stmt->execute([$user_id]);
+
+                $data = [
+                    "code" => 1,
+                    "status" => 201,
+                    "msg" => "User Updated Successfully!",
+                    'data' => null
+                ];
+                http_response_code(201); // Set HTTP response code
+
+                return json_encode($data, JSON_PRETTY_PRINT);
+            } catch (PDOException $e) {
+                $data = [
+                    "code" => 0,
+                    "status" => 500,
+                    "msg" => "Internal Server Error: " . $e->getMessage()
+                ];
+                http_response_code(500); // Set HTTP response code
+
+                return json_encode($data, JSON_PRETTY_PRINT);
+            }
+            // $avatar = null;
+        } else {
+            $data = [
+                "code" => 0,
+                "status" => 400,
+                "msg" => "User ID is required"
+            ];
+            http_response_code(400); // Set HTTP response code for bad request
+            return json_encode($data, JSON_PRETTY_PRINT);
+        }
+
+
+
+    }
+
     public function delete()
     {
         try {
