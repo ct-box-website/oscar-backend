@@ -183,13 +183,15 @@ $uri = substr($url, strrpos($url, '/') + 1);
                         <i class="fas fa-table"></i>
                         <p>Resevation</p>
                         <!-- <span class="caret"></span> -->
-                        <span class="badge badge-success">4</span>
+                        <span class="badge badge-success" id="reservation">
+
+                        </span>
                     </a>
 
                     <div class="collapse" id="tables">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="tables/booking.php">
+                                <a href="booking.php">
                                     <span class="sub-item">Booking</span>
                                 </a>
                             </li>
