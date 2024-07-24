@@ -12,7 +12,19 @@ class User
 
     public function read()
     {
-        $query = "SELECT * FROM {$this->table_name}";
+        $limit = $_GET['limit'];
+        $page = $_GET['page'];
+        $start = ($page - 1) * $limit;
+        $query = "SELECT * FROM {$this->table_name} LIMIT {$start}, {$limit}";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function readAll()
+    {
+
+        $query = "SELECT COUNT(id) as id FROM {$this->table_name}";
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
         return $stmt;
