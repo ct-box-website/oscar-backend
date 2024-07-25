@@ -2,7 +2,7 @@
 session_start();
 
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+$limit = isset($_GET['limit']) ? $_GET['limit'] : 2;
 ?>
 
 <!DOCTYPE html>
@@ -12,8 +12,8 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User</title>
-    <?php include 'assets/header.plugins.php' ?>
     <link rel="stylesheet" href="assets/css/user.module.css">
+    <?php include 'assets/header.plugins.php' ?>
     <script src="https://kit.fontawesome.com/83db4bf7c9.js" crossorigin="anonymous"></script>
 </head>
 
@@ -83,11 +83,12 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
                                 $readCountData = file_get_contents($readCountApi);
                                 $readCount = json_decode($readCountData, true);
 
-                                $pages = ceil($readCount["data"][0]['id'] / 1);
+                                $pages = ceil($readCount["data"][0]['id'] / $limit);
+                                $i = 1;
                                 ?>
                                 <?php foreach ($userData['data'] as $user) { ?>
                                     <tr>
-                                        <td style="padding: 16px 0;">1</td>
+                                        <td style="padding: 16px 0;"><?php echo $i ?></td>
                                         <td>
                                             <div
                                                 style="display: flex; flex-direction: row; align-items: center; column-gap: 12px;">
@@ -115,6 +116,7 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
                                                 class="btn btn-danger btn-round btn-sm me-2">Delete</button>
                                         </td>
                                     </tr>
+                                    <?php $i++; ?>
                                 <?php } ?>
                                 <!-- Fetch User Data Here -->
 
@@ -154,14 +156,13 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
                     <!-- Summarization Data -->
                 </div>
             </div>
+            <?php
+            include "./components/base/footer.php";
+            ?>
         </div>
-        <?php
-        include "./components/base/footer.php";
-        ?>
     </div>
 
 
-    </div>
 
 
 

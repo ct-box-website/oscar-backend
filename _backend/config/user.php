@@ -30,6 +30,14 @@ class User
         return $stmt;
     }
 
+    public function userLogin()
+    {
+        $query = "SELECT * FROM {$this->table_name}";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function readById()
     {
         $query = "SELECT * FROM {$this->table_name} WHERE id = ?";

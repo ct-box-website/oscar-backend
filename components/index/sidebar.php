@@ -257,7 +257,7 @@ $uri = substr($url, strrpos($url, '/') + 1);
                     </div>
                 </li> -->
                 <li class="nav-item">
-                    <a href="room/index.php">
+                    <a href="room/">
                         <i class="fa-solid fa-person-shelter"></i>
                         <p>Room</p>
                         <!-- <span class="badge badge-secondary">1</span> -->

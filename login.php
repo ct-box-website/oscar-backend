@@ -116,7 +116,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
             $password = $_POST['password'];
 
             // $apiUrl = "http://172.10.2.77/assignment/oscar-backend/_backend/api/user/read.php";
-            $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/read.php";
+            $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/userLogin.php";
             $data = file_get_contents($apiUrl);
             $userData = json_decode($data, true);
             $user = null;
