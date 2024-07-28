@@ -80,7 +80,6 @@ class User
             return $this->error404("Please enter password");
         } else {
             try {
-
                 if ($_FILES["avatar"]["error"] === 4) {
                     # Image does not exist
                 } else {

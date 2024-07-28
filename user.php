@@ -64,12 +64,12 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
                     <!-- Data Table -->
                     <?php
-                    if ($action === "adduser") {
+                    if ($action == "adduser" || $action == "failed") {
                         include "./components/form/adduser.php";
                     }
                     ?>
                     <div
-                        style="background-color: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1); overflow-x: auto;">
+                        style="background-color: #fff; padding: 16px 16px 26px 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1); overflow-x: auto;">
                         <table style="width: 100%">
                             <thead>
                                 <tr>
@@ -95,7 +95,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                 $i = 1;
                                 ?>
                                 <?php foreach ($userData['data'] as $user) { ?>
-                                    <tr>
+                                    <tr style="border-bottom: 1px solid #f1f1f1;">
                                         <td style="padding: 16px 0;"><?php echo $i ?></td>
                                         <td>
                                             <div
@@ -166,6 +166,24 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
             </div>
             <?php
             include "./components/base/footer.php";
+            ?>
+            <?php
+            if ($action == "list") {
+                $toast = true;
+                $type = "success";
+                $msg = "User Added Successfully";
+                include "components/ui/toast.php";
+            } elseif ($action == "failed") {
+                $toast = true;
+                $type = "error";
+                $msg = "Failed to Add User";
+                include "components/ui/toast.php";
+            } elseif ($action == 'avatar') {
+                $toast = true;
+                $type = "warning";
+                $msg = "Avatar haven't been selected";
+                include "components/ui/toast.php";
+            }
             ?>
         </div>
     </div>

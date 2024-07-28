@@ -18,7 +18,7 @@
 
 <body>
 
-    <div class="c">
+    <div class="c" style="position: relative;">
         <div class="header">
             <span>Add User</span>
             <a href="?action" style="font-size: 18px;"><i class="fa-solid fa-xmark"></i></a>
@@ -31,12 +31,13 @@
                     <div class="info">
                         <div class="formgroup">
                             <label for="name" class="label">Username</label>
-                            <input type="text" id="name" class="input" placeholder="username" name="name" required>
+                            <input type="text" id="name" value="" class="input" placeholder="username" name="name"
+                                required>
                         </div>
                         <div class="formgroup">
                             <label for="email" class="label">Email</label>
-                            <input type="email" id="email" class="input" placeholder="exampl@gmail.com" name="email"
-                                required>
+                            <input type="email" id="email" value="" class="input" placeholder="exampl@gmail.com"
+                                name="email" required>
                         </div>
                         <div class="formgroup">
                             <label for="text" class="label">Gender</label>
@@ -49,12 +50,12 @@
                         </div>
                         <div class="formgroup">
                             <label for="date" class="label">Date of Birth</label>
-                            <input type="date" id="date" class="input" name="date_of_birth" required>
+                            <input type="date" id="date" value="" class="input" name="date_of_birth" required>
                         </div>
                         <div class="formgroup">
                             <label for="password" class="label">Password</label>
-                            <input type="password" id="password" class="input" placeholder="********" name="password"
-                                required>
+                            <input type="password" value="" id="password" class="input" placeholder="********"
+                                name="password" required>
                             <span id="show" style="position: absolute; top: 42px; right: 16px; cursor: pointer">
 
                                 <i id="icon" class="fa-solid fa-eye-slash" style="color: #a1a1a1;"></i>
@@ -140,16 +141,41 @@
         </div>
     </div>
 
+
     <script>
-        document.getElementById('submit').addEventListener('click', function () {
-            var username = document.getElementById('name').value;
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-            var gender = document.getElementById('gender').value;
-            var date_of_birth = document.getElementById('date').value;
-            var address = document.getElementById('address').value;
+        document.getElementById('submit').addEventListener('click', async function () {
+            var username = document.getElementById('name')?.value;
+            var email = document.getElementById('email')?.value;
+            var password = document.getElementById('password')?.value;
+            var gender = document.getElementById('gender')?.value;
+            var date_of_birth = document.getElementById('date')?.value;
+            var address = document.getElementById('address')?.value;
             var avatar = document.getElementById('avatar');
-            console.log(avatar.files[0].name);
+            if (username === "" || email === "" || password === "" || gender === "" || date_of_birth === "" || address === "") {
+                window.location.href = '?action=failed';
+                return false;
+            }
+            if (avatar.files[0] === undefined) {
+                window.location.href = '?action=avatar';
+
+                const formdata = new FormData();
+                formdata.append("username", username);
+                formdata.append("password", password);
+                formdata.append("email", email);
+                formdata.append("address", address);
+                formdata.append("status", "1");
+
+                const requestOptions = {
+                    method: "POST",
+                    body: formdata,
+                    redirect: "follow"
+                };
+
+                const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/user/create.php", requestOptions)
+                const result = await response.text();
+                console.log(result);
+                return false;
+            }
 
             const formdata = new FormData();
             formdata.append("username", username);
@@ -165,16 +191,16 @@
                 redirect: "follow"
             };
 
-            fetch("http://localhost/assignment/oscar-backend/_backend/api/user/create.php", requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                    console.log(result);
-                    window.location.reload();
-                })
-                .catch((error) => console.error("ERROR ", error));
+            const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/user/create.php", requestOptions)
+            const result = await response.json();
+            if (result.code == 1) {
+                window.location.href = '?action=list';
+            }
 
         })
     </script>
+
+
 
 </body>
 

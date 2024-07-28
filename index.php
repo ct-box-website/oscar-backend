@@ -209,9 +209,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
           </div> -->
 
           <!-- Geolocation -->
-          <?php
-          include "./components/index/geolocation.php";
-          ?>
+          <!--  -->
 
           <div class="row">
 
@@ -231,6 +229,19 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
       <!-- Footer -->
       <?php
       include "./components/base/footer.php";
+      ?>
+      <?php
+      if ($action == "list") {
+        $toast = true;
+        $type = "success";
+        $msg = "User Added Successfully";
+        include "components/ui/toast.php";
+      } elseif ($action == "faild") {
+        $toast = true;
+        $type = "error";
+        $msg = "Failed to Add User";
+        include "components/ui/toast.php";
+      }
       ?>
     </div>
 
@@ -331,8 +342,8 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
   <script src="assets/js/kaiadmin.min.js"></script>
 
   <!-- Kaiadmin DEMO methods, don't include it in your project! -->
-  <script src="assets/js/setting-demo.js"></script>
-  <script src="assets/js/demo.js"></script>
+  <!-- <script src="assets/js/setting-demo.js"></script> -->
+  <!-- <script src="assets/js/demo.js"></script> -->
   <script>
     $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
       type: "line",
