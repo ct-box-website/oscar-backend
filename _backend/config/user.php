@@ -285,7 +285,7 @@ class User
     public function delete()
     {
         try {
-            $query = "DELETE FROM users WHERE id = ?";
+            $query = "DELETE FROM {$this->table_name} WHERE id = ?";
             $stmt = $this->connection->prepare($query);
             $stmt->bindParam(1, $this->id);
             $stmt->execute();

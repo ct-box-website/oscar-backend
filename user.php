@@ -277,9 +277,19 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                 body: urlencoded,
                 redirect: "follow"
             };
-            const response = await = fetch("http://localhost/assignment/oscar-backend/_backend/api/user/delete.php", requestOptions)
-            const result = await response.json();
-            alert(result.data.msg);
+
+            try {
+                const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/user/delete.php", requestOptions);
+                const result = await response.json();
+                console.log(result)
+                if (result.code == 1) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete user');
+                }
+            } catch (error) {
+                console.error(error);
+            };
         }
     </script>
 
