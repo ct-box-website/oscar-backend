@@ -2,7 +2,10 @@
 session_start();
 
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$limit = isset($_GET['limit']) ? $_GET['limit'] : 2;
+$limit = isset($_GET['limit']) ? $_GET['limit'] : 8;
+
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+
 ?>
 
 <!DOCTYPE html>
@@ -60,9 +63,14 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 2;
                     ?>
 
                     <!-- Data Table -->
+                    <?php
+                    if ($action === "adduser") {
+                        include "./components/form/adduser.php";
+                    }
+                    ?>
                     <div
-                        style="background-color: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1)">
-                        <table style="width: 100%;">
+                        style="background-color: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1); overflow-x: auto;">
+                        <table style="width: 100%">
                             <thead>
                                 <tr>
                                     <th style="padding: 0 0 16px 0 ;">No</th>
@@ -104,16 +112,16 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 2;
                                         <td style="font-size: 16px;"><?php echo $user['address'] ?></td>
                                         <td style="text-align: center;">
                                             <div
-                                                style="<?php echo $user['status'] == 1 ? "background-color: #1572E8;" : "background-color: #F25961;" ?> color: #fff; border-radius: 12px; padding: 2px 0;">
+                                                style="<?php echo $user['status'] == 1 ? "background-color: #569c68;" : "background-color: #e64e65;" ?> color: #fff; border-radius: 12px; padding: 2px 0; font-size: 12px; font-weight: 600;">
                                                 <?php echo $user['status'] == 1 ? "Active" : "Inactive" ?>
                                             </div>
                                         </td>
 
                                         <td style="text-align: center">
                                             <button type="button"
-                                                class="btn btn-primary btn-round btn-sm me-2">Edit</button>
+                                                style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">Edit</button>
                                             <button type="button"
-                                                class="btn btn-danger btn-round btn-sm me-2">Delete</button>
+                                                style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">Delete</button>
                                         </td>
                                     </tr>
                                     <?php $i++; ?>

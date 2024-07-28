@@ -6,6 +6,9 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['loggedin'])) {
   header("location: {$path}login.php");
   die();
 }
+
+$action = isset($_GET['action']) ? $_GET['action'] : null;
+
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +126,12 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['loggedin'])) {
           <!-- Summarization Data -->
           <?php
           include "./components/index/summary.php";
+          ?>
+
+          <?php
+          if ($action === "adduser") {
+            include "./components/form/adduser.php";
+          }
           ?>
 
 

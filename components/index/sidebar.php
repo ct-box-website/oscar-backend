@@ -1,6 +1,8 @@
 <?php
+session_start();
 $url = $_SERVER['REQUEST_URI'];
 $uri = substr($url, strrpos($url, '/') + 1);
+
 ?>
 
 <script src="https://kit.fontawesome.com/83db4bf7c9.js" crossorigin="anonymous"></script>
@@ -68,11 +70,13 @@ $uri = substr($url, strrpos($url, '/') + 1);
                     class="nav-item <?php echo ($uri === 'user.php' || $uri === 'employee.php' || $uri === 'attendance.php') ? "active" : "" ?> ">
 
 
-                    <a data-bs-toggle="collapse" href="#base">
-                        <i class="fas fa-user"></i>
-                        <p>User</p>
-                        <span class="caret"></span>
-                    </a>
+                    <?php if ($_SESSION["username"] == "admin") { ?>
+                        <a data-bs-toggle="collapse" href="#base">
+                            <i class="fas fa-user"></i>
+                            <p>User</p>
+                            <span class="caret"></span>
+                        </a>
+                    <?php } ?>
 
                     <!-- Dropdown -->
                     <div class="collapse" id="base">

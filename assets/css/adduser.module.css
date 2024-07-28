@@ -1,0 +1,123 @@
+/* @container */
+.c {
+    background-color: #fff;
+    padding: 24px 16px;
+    margin-bottom: 24px;
+    border-radius: 6px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+
+}
+
+.c .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.c .header span {
+    font-size: 18px;
+    font-weight: 600;
+}
+.c .form {
+    display: flex;
+    flex-direction: row;
+    column-gap: 64px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+@media (max-width: 1280px) {
+    .c .form {
+        flex-direction: column;
+        column-gap: 0;
+    }
+    .c .form .avatar {
+        width: 200px;
+    }
+  }
+
+  .c .form .info {
+      flex: 4;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 24px;
+      
+    }
+    .c .form .avatar {
+        margin-top: 24px;
+        flex: 1;
+    }
+    .c .formgroup {
+        display: flex;
+        flex-direction: column;
+        row-gap: 6px;
+        position: relative;
+    }
+
+
+.c .form .info .input {
+    border: none;
+    border-radius: 4px; 
+    outline: none;
+    padding: 14px 10px;
+    background-color: #f7f7f7;
+    font-size: 16px;
+    color: #919191;
+    font-weight: 600;
+}
+
+.c .form .info select {
+    border: none;
+    border-radius: 4px; 
+    outline: none;
+    padding: 15px;
+    background-color: #f7f7f7;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+input[type="text"]::placeholder{
+    color: #a1a1a1;
+    font-weight: 400;
+}
+input[type="email"]::placeholder{
+    color: #a1a1a1;
+    font-weight: 400;
+}
+input[type="password"]::placeholder{
+    color: #a1a1a1;
+    font-weight: 400;
+}
+input[type="file"]{
+    display: none;
+}
+
+.avatar .avatar-board {
+    border: 2px solid #f7f7f7;
+    height: 200px;
+    margin-bottom: 12px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-image: url('https://via.placeholder.com/200');
+}
+.c .button {
+    margin-top: 24px;
+}
+
+input[type="submit"]{
+    background-color: #1059C6;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.custom_animated:active {
+    scale: 1.01;
+    transition: all ease-in-out 0.1s;
+}

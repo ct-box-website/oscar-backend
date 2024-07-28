@@ -20,8 +20,10 @@ session_start();
         </div>
         <?php if ($_SESSION["username"] === "admin") { ?>
             <div class="ms-md-auto py-2 py-md-0">
-                <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                <a href="#" class="btn btn-primary btn-round">Add User</a>
+                <form action="" method="GET">
+                    <a href="user.php" class="btn btn-label-info btn-round me-2">Manage</a>
+                    <a href="?action=adduser" class="btn btn-primary btn-round">Add User</a>
+                </form>
             </div>
         <?php } ?>
 

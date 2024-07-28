@@ -37,3 +37,8 @@
 .arrow:active{
     scale: 1.015;
 }
+
+.work-btn {
+  border: none;
+  outline: none;
+}
