@@ -21,6 +21,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
     <link rel="shortcut icon"
         href="https://cdn.myportfolio.com/17be4dd08c5417027a544816a909fcf8/4cb3876a-d1fd-46fc-84bb-4a5285eb33bc_rw_1200.png?h=b58c258f0b0bc2fd7d20c2ee8084a9cd"
         type="image/x-icon">
+    <?php include './assets/fontawesome.plugins.php' ?>
     <style>
         .input {
             padding: 10px;
@@ -111,19 +112,22 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
         if (isset($_POST['username']) && isset($_POST['password'])) {
 
             // State management
-            $toast = false;
-            $msg = "";
             $username = $_POST['username'];
             $password = $_POST['password'];
-
             // $apiUrl = "http://172.10.2.77/assignment/oscar-backend/_backend/api/user/read.php";
             $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/userLogin.php";
             $data = file_get_contents($apiUrl);
             $userData = json_decode($data, true);
             $user = null;
             foreach ($userData['data'] as $u) {
-                if ($u["username"] === $username) {
+                if ($u["username"] == $username) {
                     $user = $u;
+                    break;
+                } else {
+                    $toast = true;
+                    $msg = "Username not found.";
+                    $type = "error";
+                    $user = null;
                     break;
                 }
             }
@@ -138,7 +142,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
                     sleep(2);
                     header("Location: http://localhost/assignment/oscar-backend/index.php");
                 } else {
-                    $msg = "Password Incorrect. Please try again. 1 second";
+                    $type = "error";
+                    $msg = "Password Incorrect.";
                     $toast = true;
                 }
 

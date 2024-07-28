@@ -8,7 +8,18 @@
 </head>
 
 <body>
+    <script>
+        var start = new Date().getTime();
+        var end = new Date().getTime() + 6000; // 6 seconds
+        var x = setInterval(function () {
+            var timeLeft = end - new Date().getTime();
 
+            document.getElementById("timer").innerHTML = Math.floor((timeLeft % (1000 * 60)) / 1000) + " seconds";;
+            if (timeLeft < 1) {
+                clearInterval(x);
+            }
+        });
+    </script>
     <div id="toast"
         style="position: fixed; bottom: 50px; right: 20px; z-index: 100; width: 400px; display: <?php echo $toast ? "blcok" : "none" ?>; transition: all ease-in-uot 0.5s;">
         <div
@@ -36,7 +47,7 @@
             </div>
             <i class="fa-solid fa-<?php echo $icon ?> fa-2x"
                 style="color: <?php echo $bg ?>; padding-right: 8px; font-size: 18px;"></i>
-            <span style="font-size: 18px;"><?php echo $msg; ?> </span>
+            <span style="font-size: 16px;"><?php echo $msg; ?> &nbsp; <span id="timer"></span> </span>
         </div>
     </div>
     <script>
