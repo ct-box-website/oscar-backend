@@ -111,8 +111,11 @@
 
                     <div class="avatar">
                         <div style="" class="avatar-board">
-
-                            <img src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" id="preview">
+                            <i class="fa-solid fa-image"
+                                style="color: #ccc; padding-right: 4px; font-size: 24px; display: block; "
+                                id="icon-img"></i>
+                            <img src="" alt="Avatar"
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;" id="preview">
                         </div>
                         <label for="avatar" class="btn btn-primary" style="
                         width: 100%;
@@ -131,6 +134,8 @@
                                 var reader = new FileReader();
                                 reader.onloadend = function () {
                                     $("#preview").attr("src", reader.result);
+                                    $("#preview").css("display", "block");
+                                    $("#icon-img").css("display", "none");
                                 }
                                 reader.readAsDataURL(file);
                             });

@@ -29,6 +29,7 @@ if (isset($_POST["id"])) {
                 "email" => $user->email,
                 "address" => $user->address,
                 'status' => $user->status,
+                'role' => $user->role,
                 'avatar' => $user->avatar
             ];
 

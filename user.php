@@ -89,7 +89,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
+                                    <button onclick="deleteUser()" type="button" id="deleteButton"
+                                        class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
+
                                 </div>
                             </div>
                         </div>
@@ -105,7 +107,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                     <th style="padding: 0 0 16px 0 ;">Email</th>
                                     <th style="padding: 0 0 16px 0 ;">Address</th>
                                     <th style="text-align: center; padding: 0 0 16px 0 ;">Status</th>
-                                    <th style="text-align: center; padding: 0 0 16px 0 ;">Action</th>
+                                    <?php if ($_SESSION['username'] == 'admin') { ?>
+                                        <th style="text-align: center; padding: 0 0 16px 0 ;">Action</th>
+                                    <?php } ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,7 +123,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                 $readCount = json_decode($readCountData, true);
 
                                 $pages = ceil($readCount["data"][0]['id'] / $limit);
-                                $i = 1;
+                                $i = $page * $limit - $limit + 1;
                                 ?>
                                 <?php foreach ($userData['data'] as $user) { ?>
                                     <tr style="border-bottom: 1px solid #f1f1f1;">
@@ -143,14 +147,15 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                                 <?php echo $user['status'] == 1 ? "Active" : "Inactive" ?>
                                             </div>
                                         </td>
-
-                                        <td style="text-align: center">
-                                            <button type="button"
-                                                style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">Edit</button>
-                                            <button type="button" onclick="getUserId(<?php echo $user['id'] ?>)"
-                                                id="user_id" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">Delete</button>
-                                        </td>
+                                        <?php if ($_SESSION['username'] == 'admin') { ?>
+                                            <td style="text-align: center">
+                                                <button type="button"
+                                                    style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">Edit</button>
+                                                <button type="button" onclick="getUserId(<?php echo $user['id'] ?>)"
+                                                    id="user_id" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                                    style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">Delete</button>
+                                            </td>
+                                        <?php } ?>
                                     </tr>
                                     <?php $i++; ?>
                                 <?php } ?>
@@ -181,6 +186,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                             const result = await response.json();
                             console.log(result);
                             document.getElementById("user").innerHTML = `
+                                <span style="font-size: 12px; font-weight: 600;" id="userId" >${result.data.id}</span>
                                 <div style="width: 32px; height: 32px; border-radius: 50px; overflow: hidden;" >
                                     <img src="_backend/config/avatar/${result.data.avatar}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;"  />
                                 </div>
@@ -246,10 +252,36 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
             ?>
         </div>
     </div>
+    <script>
+        async function deleteUser() {
+            const userId = document.getElementById('userId').innerHTML;
+            console.log(userId);
 
 
+            await deleteMe(userId);
+        };
 
 
+    </script>
+    <script>
+        async function deleteMe(id) {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            const urlencoded = new URLSearchParams();
+            urlencoded.append("id", id);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: urlencoded,
+                redirect: "follow"
+            };
+            const response = await = fetch("http://localhost/assignment/oscar-backend/_backend/api/user/delete.php", requestOptions)
+            const result = await response.json();
+            alert(result.data.msg);
+        }
+    </script>
 
     <?php include 'assets/footer.plugins.php' ?>
 

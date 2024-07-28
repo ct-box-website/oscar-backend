@@ -49,6 +49,7 @@ class User
         $this->username = $row["username"];
         $this->password = $row["password"];
         $this->email = $row["email"];
+        $this->role = $row["role"];
         $this->address = $row["address"];
         $this->status = $row["status"];
         $this->avatar = $row["avatar"];
@@ -108,9 +109,9 @@ class User
 
                         move_uploaded_file($tmpName, $uploadFile);
                         $avatar = $newImageName;
-                        $query = "INSERT INTO users (username, password, email, address, status, avatar) VALUES (?, ?, ?, ?, ?, ?)";
+                        $query = "INSERT INTO users (username, password, email, address, status, avatar, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $this->connection->prepare($query);
-                        $stmt->execute([$username, $password, $email, $address, $status, $avatar]);
+                        $stmt->execute([$username, $password, $email, $address, $status, $avatar, 'user']);
 
                         $data = [
                             "code" => 1,
@@ -122,6 +123,7 @@ class User
                                 'password' => $password,
                                 'email' => $email,
                                 'address' => $address,
+                                'role' => 'user',
                                 'status' => $status,
                                 'avatar' => $avatar
                             ]
@@ -154,6 +156,7 @@ class User
         $email = htmlspecialchars($input["email"]);
         $address = htmlspecialchars($input["address"]);
         $status = htmlspecialchars($input["status"]);
+        $role = htmlspecialchars($input["role"]);
 
         if (empty(trim($username))) {
             return $this->error404("Please enter a username");
@@ -195,9 +198,9 @@ class User
 
 
 
-                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ? WHERE id = ?";
+                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ?, role = ? WHERE id = ?";
                         $stmt = $this->connection->prepare($query);
-                        $stmt->execute([$username, $email, $address, $status, $avatar, $user_id]);
+                        $stmt->execute([$username, $email, $address, $status, $avatar, strtolower($role), $user_id]);
 
                         $data = [
                             "code" => 1,
@@ -209,6 +212,7 @@ class User
                                 'email' => $email,
                                 'address' => $address,
                                 'status' => $status,
+                                'role' => $role,
                                 'avatar' => $avatar,
                             ]
                         ];

@@ -105,7 +105,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
         </form>
         <?php
 
-
+        $username = "";
+        $password = "";
 
         if (isset($_POST['username']) && isset($_POST['password'])) {
 
@@ -144,9 +145,6 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
             } else {
                 $toast = true;
             }
-        } else {
-            $msg = "Please fill out all fields. 4 second";
-            $toast = true;
         }
         ?>
         <?php

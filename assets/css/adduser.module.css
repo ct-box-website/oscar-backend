@@ -50,6 +50,7 @@
     .c .form .avatar {
         margin-top: 24px;
         flex: 1;
+        margin-right: 10px;
     }
     .c .formgroup {
         display: flex;
@@ -102,7 +103,11 @@ input[type="file"]{
     margin-bottom: 12px;
     border-radius: 5px;
     overflow: hidden;
-    background-image: url('https://via.placeholder.com/200');
+    background-color: #f7f7f7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .c .button {
     margin-top: 24px;

@@ -29,6 +29,7 @@ if ($num > 0) {
             'email' => $email,
             'address' => $address,
             'status' => $status,
+            'role' => $role,
             'avatar' => $avatar
         ];
         array_push($users['data'], $data);

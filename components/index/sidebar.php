@@ -3,6 +3,31 @@ session_start();
 $url = $_SERVER['REQUEST_URI'];
 $uri = substr($url, strrpos($url, '/') + 1);
 
+$id = $_SESSION['id'];
+$curl = curl_init();
+
+curl_setopt_array(
+    $curl,
+    [
+        CURLOPT_URL => 'http://localhost/assignment/oscar-backend/_backend/api/user/readByID.php',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => "id=$id",
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/x-www-form-urlencoded'
+        ],
+    ]
+);
+
+$response = curl_exec($curl);
+$userData = json_decode($response, true);
+curl_close($curl);
+
 ?>
 
 <script src="https://kit.fontawesome.com/83db4bf7c9.js" crossorigin="anonymous"></script>
@@ -70,33 +95,38 @@ $uri = substr($url, strrpos($url, '/') + 1);
                     class="nav-item <?php echo ($uri === 'user.php' || $uri === 'employee.php' || $uri === 'attendance.php') ? "active" : "" ?> ">
 
 
-                    <?php if ($_SESSION["username"] == "admin") { ?>
-                        <a data-bs-toggle="collapse" href="#base">
-                            <i class="fas fa-user"></i>
-                            <p>User</p>
-                            <span class="caret"></span>
-                        </a>
-                    <?php } ?>
+
+                    <a data-bs-toggle="collapse" href="#base">
+                        <i class="fas fa-user"></i>
+                        <p>User</p>
+                        <span class="caret"></span>
+                    </a>
+
 
                     <!-- Dropdown -->
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
-                            <li>
-                                <!-- <a href="components/buttons.html">
+                            <?php if ($userData['data']['role'] == 'admin') { ?>
+                                <li>
+                                    <!-- <a href="components/buttons.html">
                                     <span class="sub-item">Buttons</span>
                                 </a> -->
-                                <a href="user.php">
-                                    <span class="sub-item">User</span>
-                                </a>
-                            </li>
-                            <li>
-                                <!-- <a href="components/avatars.html">
+
+                                    <a href="user.php">
+                                        <span class="sub-item">User</span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                            <?php if ($userData['data']['role'] == 'manager' || $userData['data']['role'] == 'admin') { ?>
+                                <li>
+                                    <!-- <a href="components/avatars.html">
                                     <span class="sub-item">Avatars</span>
                                 </a> -->
-                                <a href="employee.php">
-                                    <span class="sub-item">Employees</span>
-                                </a>
-                            </li>
+                                    <a href="employee.php">
+                                        <span class="sub-item">Employees</span>
+                                    </a>
+                                </li>
+                            <?php } ?>
                             <li>
                                 <a href="attendance.php">
                                     <span class="sub-item">Attendance</span>
