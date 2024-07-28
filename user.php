@@ -18,6 +18,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
     <link rel="stylesheet" href="assets/css/user.module.css">
     <?php include 'assets/header.plugins.php' ?>
     <script src="https://kit.fontawesome.com/83db4bf7c9.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -55,7 +56,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
             </div>
 
             <div class="container">
-                <div class="page-inner">
+                <div class="" style="padding: 30px;">
 
                     <?php
                     $title = "User";
@@ -66,6 +67,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                     <?php
                     if ($action == "adduser" || $action == "failed") {
                         include "./components/form/adduser.php";
+                    }
+                    if ($action == "edituser") {
+                        include "./components/form/edituser.php";
                     }
                     ?>
 
@@ -98,71 +102,75 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                     </div>
 
                     <div
-                        style="background-color: #fff; padding: 16px 16px 26px 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1); overflow-x: auto;">
-                        <table style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 0 0 16px 0 ;">No</th>
-                                    <th style="padding: 0 0 16px 0 ;">Username</th>
-                                    <th style="padding: 0 0 16px 0 ;">Email</th>
-                                    <th style="padding: 0 0 16px 0 ;">Address</th>
-                                    <th style="text-align: center; padding: 0 0 16px 0 ;">Status</th>
+                        style="overflow-x: auto; background-color: #fff; padding: 16px 16px 26px 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1);">
+                        <table style="width: 100%;">
+                            <tr>
+                                <th style="padding: 0 0 16px 0 ;">No</th>
+                                <th style="padding: 0 0 16px 0 ;">Username</th>
+                                <th style="padding: 0 0 16px 0 ;">Email</th>
+                                <th style="padding: 0 0 16px 0 ;">Date of Birth</th>
+                                <th style="padding: 0 0 16px 0 ;">Gender</th>
+                                <th style="padding: 0 0 16px 0 ;">Address</th>
+                                <th style="padding: 0 0 16px 0 ;">Role</th>
+                                <th style="text-align: center; padding: 0 0 16px 0 ;">Status</th>
+                                <?php if ($_SESSION['username'] == 'admin') { ?>
+                                    <th style="text-align: center; padding: 0 0 16px 0 ;">Action</th>
+                                <?php } ?>
+                            </tr>
+
+                            <?php
+                            $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/read.php?page={$page}&limit={$limit}";
+                            $data = file_get_contents($apiUrl);
+                            $userData = json_decode($data, true);
+
+                            $readCountApi = "http://localhost/assignment/oscar-backend/_backend/api/user/readAll.php";
+                            $readCountData = file_get_contents($readCountApi);
+                            $readCount = json_decode($readCountData, true);
+
+                            $pages = ceil($readCount["data"][0]['id'] / $limit);
+                            $i = $page * $limit - $limit + 1;
+                            ?>
+                            <?php foreach ($userData['data'] as $user) { ?>
+                                <tr style="border-bottom: 1px solid #f1f1f1;">
+                                    <td style="padding: 16px 0;"><?php echo $i ?></td>
+                                    <td>
+                                        <div
+                                            style="display: flex; flex-direction: row; align-items: center; column-gap: 12px;">
+                                            <div style="width: 32px; height: 32px; border-radius: 8px; overflow: hidden;">
+                                                <img src="_backend/config/avatar/<?= $user['avatar'] ?>"
+                                                    style="width: 100%; height: 100%; object-fit: cover;" />
+                                            </div>
+                                            <div style="font-size: 16px;"><?php echo $user['username'] ?></div>
+                                        </div>
+                                    </td>
+                                    <td style="font-size: 16px;"><?php echo $user['email'] ?></td>
+                                    <td style="font-size: 16px;"><?php echo $user['date_of_birth'] ?></td>
+                                    <td style="font-size: 16px;">
+                                        <?php echo strtoupper($user['gender'][0]) . substr($user['gender'], 1) ?>
+                                    </td>
+                                    <td style="font-size: 16px;"><?php echo $user['address'] ?></td>
+                                    <td style="font-size: 16px;"><?php echo $user['role'] ?></td>
+                                    <td style="text-align: center;">
+                                        <div
+                                            style="<?php echo $user['status'] == 1 ? "background-color: #569c68;" : "background-color: #e64e65;" ?> color: #fff; border-radius: 12px; padding: 2px 0; font-size: 12px; font-weight: 600;">
+                                            <?php echo $user['status'] == 1 ? "Active" : "Inactive" ?>
+                                        </div>
+                                    </td>
                                     <?php if ($_SESSION['username'] == 'admin') { ?>
-                                        <th style="text-align: center; padding: 0 0 16px 0 ;">Action</th>
+                                        <td style="text-align: center">
+                                            <a href="?action=edituser&id=<?php echo $user['id'] ?>"
+                                                style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">Edit</a>
+                                            <button type="button" onclick="getUserId(<?php echo $user['id'] ?>)" id="user_id"
+                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                                style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">Delete</button>
+                                        </td>
                                     <?php } ?>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/user/read.php?page={$page}&limit={$limit}";
-                                $data = file_get_contents($apiUrl);
-                                $userData = json_decode($data, true);
+                                <?php $i++; ?>
+                            <?php } ?>
+                            <!-- Fetch User Data Here -->
 
-                                $readCountApi = "http://localhost/assignment/oscar-backend/_backend/api/user/readAll.php";
-                                $readCountData = file_get_contents($readCountApi);
-                                $readCount = json_decode($readCountData, true);
-
-                                $pages = ceil($readCount["data"][0]['id'] / $limit);
-                                $i = $page * $limit - $limit + 1;
-                                ?>
-                                <?php foreach ($userData['data'] as $user) { ?>
-                                    <tr style="border-bottom: 1px solid #f1f1f1;">
-                                        <td style="padding: 16px 0;"><?php echo $i ?></td>
-                                        <td>
-                                            <div
-                                                style="display: flex; flex-direction: row; align-items: center; column-gap: 12px;">
-                                                <div
-                                                    style="width: 32px; height: 32px; border-radius: 4px; overflow: hidden;">
-                                                    <img src="_backend/config/avatar/<?= $user['avatar'] ?>"
-                                                        style="width: 100%; height: 100%; object-fit: cover;" />
-                                                </div>
-                                                <div style="font-size: 16px;"><?php echo $user['username'] ?></div>
-                                            </div>
-                                        </td>
-                                        <td style="font-size: 16px;"><?php echo $user['email'] ?></td>
-                                        <td style="font-size: 16px;"><?php echo $user['address'] ?></td>
-                                        <td style="text-align: center;">
-                                            <div
-                                                style="<?php echo $user['status'] == 1 ? "background-color: #569c68;" : "background-color: #e64e65;" ?> color: #fff; border-radius: 12px; padding: 2px 0; font-size: 12px; font-weight: 600;">
-                                                <?php echo $user['status'] == 1 ? "Active" : "Inactive" ?>
-                                            </div>
-                                        </td>
-                                        <?php if ($_SESSION['username'] == 'admin') { ?>
-                                            <td style="text-align: center">
-                                                <button type="button"
-                                                    style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">Edit</button>
-                                                <button type="button" onclick="getUserId(<?php echo $user['id'] ?>)"
-                                                    id="user_id" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                    style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">Delete</button>
-                                            </td>
-                                        <?php } ?>
-                                    </tr>
-                                    <?php $i++; ?>
-                                <?php } ?>
-                                <!-- Fetch User Data Here -->
-
-                                <!-- Fetch User Data Here -->
-                            </tbody>
+                            <!-- Fetch User Data Here -->
                         </table>
                     </div>
 

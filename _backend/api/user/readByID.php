@@ -30,7 +30,9 @@ if (isset($_POST["id"])) {
                 "address" => $user->address,
                 'status' => $user->status,
                 'role' => $user->role,
-                'avatar' => $user->avatar
+                'avatar' => $user->avatar,
+                'date_of_birth' => $user->date_of_birth,
+                'gender' => $user->gender,
             ];
 
             $data = [

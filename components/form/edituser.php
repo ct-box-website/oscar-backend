@@ -1,5 +1,31 @@
 <?php
 
+$id = $_GET['id'];
+
+
+$curl = curl_init();
+
+curl_setopt_array(
+    $curl,
+    [
+        CURLOPT_URL => 'http://localhost/assignment/oscar-backend/_backend/api/user/readByID.php',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => "id=$id",
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/x-www-form-urlencoded'
+        ],
+    ]
+);
+
+$response = curl_exec($curl);
+$userData = json_decode($response, true);
+curl_close($curl);
 
 
 ?>
@@ -17,10 +43,9 @@
 </head>
 
 <body>
-
     <div class="c" style="position: relative;">
         <div class="header">
-            <span>Add User</span>
+            <span>Update User</span>
             <a href="?action" style="font-size: 18px;"><i class="fa-solid fa-xmark"></i></a>
         </div>
 
@@ -31,30 +56,49 @@
                     <div class="info">
                         <div class="formgroup">
                             <label for="name" class="label">Username</label>
-                            <input type="text" id="name" value="" class="input" placeholder="username" name="name"
-                                required>
+                            <input type="text" id="user_id" value="<?php echo $userData['data']['id'] ?>" class="input"
+                                placeholder="username" name="id" hidden disabled>
+                            <input type="text" oninput="console.log(this.value)" id="username"
+                                value="<?php echo $userData['data']['username'] ?>" class="input" placeholder="username"
+                                name="name" required>
+
                         </div>
                         <div class="formgroup">
                             <label for="email" class="label">Email</label>
-                            <input type="email" id="email" value="" class="input" placeholder="exampl@gmail.com"
-                                name="email" required>
+                            <input type="email" id="email" value="<?php echo $userData['data']['email'] ?>"
+                                class="input" placeholder="exampl@gmail.com" name="email" required>
                         </div>
                         <div class="formgroup">
                             <label for="text" class="label">Gender</label>
                             <select name="gender" id="gender" style="color: #919191;">
-                                <option value="-" style="color: #a1a1a1;">Select Gender</option>
+                                <option value="<?php echo $userData['data']['gender'] ?>" style="color: #a1a1a1;">
+                                    <?php echo strtoupper($userData['data']['gender'][0]) . substr($userData['data']['gender'], 1) ?>
+                                </option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
+
                         <div class="formgroup">
-                            <label for="date" class="label">Date of Birth</label>
-                            <input type="date" id="date" value="" class="input" name="date_of_birth" required>
+                            <label for="text" class="label">Role</label>
+                            <select name="role" id="role" style="color: #919191;">
+                                <option value="<?php echo $userData['data']['gender'] ?>" style="color: #a1a1a1;">
+                                    <?php echo strtoupper($userData['data']['role'][0]) . substr($userData['data']['role'], 1) ?>
+                                </option>
+                                <option value="manager">Manager</option>
+                                <option value="user">User</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
                         <div class="formgroup">
+                            <label for="date" class="label">Date of Birth</label>
+                            <input type="date" id="date" value="<?php echo $userData['data']['date_of_birth'] ?>"
+                                class="input" name="date_of_birth" required>
+                        </div>
+                        <!-- <div class="formgroup" onclick="alert('Password cannot update!')">
                             <label for="password" class="label">Password</label>
-                            <input type="password" value="" id="password" class="input" placeholder="********"
+                            <input type="password" value="" id="password" class="input" disabled placeholder="********"
                                 name="password" required>
                             <span id="show" style="position: absolute; top: 42px; right: 16px; cursor: pointer">
 
@@ -74,12 +118,15 @@
                                     });
                                 })
                             </script>
-                        </div>
+                        </div> -->
 
                         <div class="formgroup">
                             <label for="password" class="label">Address</label>
-                            <select name="address" id="address" style="color: #919191;">
-                                <option value="" style="color: #a1a1a1;">Select Address</option>
+                            <select name="address" onchange="console.log(this.value)" id="address"
+                                style="color: #919191;">
+                                <option value="<?php echo $userData['data']['address'] ?>" style="color: #a1a1a1;">
+                                    <?php echo $userData['data']['address'] ?>
+                                </option>
                                 <option value="banteay-meanchey">Banteay Meanchey</option>
                                 <option value="battambang">Battambang</option>
                                 <option value="kampong-cham">Kampong Cham</option>
@@ -105,12 +152,13 @@
                                 <option value="kep">Kep</option>
                                 <option value="pailin">Pailin</option>
                                 <option value="tboung-khmum">Tboung Khmum</option>
+
                             </select>
                         </div>
 
                         <button type="button" id="submit" class="btn btn-primary custom_animated">
                             <i class="fa-solid fa-floppy-disk" style="padding-right: 4px;"></i>
-                            Save
+                            Update
                         </button>
                         <button type="reset" class="btn btn-danger">
                             <i class="fa-solid fa-trash-alt" style="padding-right: 4px;"></i>
@@ -121,11 +169,11 @@
 
                     <div class="avatar">
                         <div style="" class="avatar-board">
-                            <i class="fa-solid fa-image"
+                            <!-- <i class="fa-solid fa-image"
                                 style="color: #ccc; padding-right: 4px; font-size: 24px; display: block; "
-                                id="icon-img"></i>
-                            <img src="" alt="Avatar"
-                                style="width: 100%; height: 100%; object-fit: cover; display: none;" id="preview">
+                                id="icon-img"></i> -->
+                            <img src="_backend/config/avatar/<?php echo $userData['data']['avatar'] ?>" alt="Avatar"
+                                style="width: 100%; height: 100%; object-fit: cover;" id="preview">
                         </div>
                         <label for="avatar" class="btn btn-primary" style="
                         width: 100%;
@@ -137,15 +185,14 @@
                             <i class="fa-solid fa-image" style="color: #fff; padding-right: 4px;"></i>
                             <span style="color: #fff;">Upload Avatar</span>
                         </label>
-                        <input type="file" id="avatar" name="avatar" required>
+                        <input type="file" id="avatar" value="<?php echo $userData['data']['avatar'] ?>" name="avatar"
+                            required>
                         <script>
                             $("#avatar").change(function () {
                                 var file = this.files[0];
                                 var reader = new FileReader();
                                 reader.onloadend = function () {
                                     $("#preview").attr("src", reader.result);
-                                    $("#preview").css("display", "block");
-                                    $("#icon-img").css("display", "none");
                                 }
                                 reader.readAsDataURL(file);
                             });
@@ -153,80 +200,59 @@
                     </div>
                 </div>
             </form>
+            <script>
+                document.getElementById("submit").addEventListener("click", async function () {
+                    var id = document.getElementById("user_id").value;
+                    var name = document.getElementById("username").value;
+                    var email = document.getElementById("email").value;
+                    var address = document.getElementById("address").value;
+                    var date_of_birth = document.getElementById("date").value;
+                    var gender = document.getElementById("gender").value;
+                    var role = document.getElementById("role").value;
+                    var avatar = document.getElementById("avatar");
+                    if (!avatar) {
+                        alert("Please select an avatar!");
+                        console.log(avatar);
+                        return;
+                    } else {
+                        console.log(avatar?.value);
+                    }
+
+                    // Create a new FormData object.
+                    const formdata = new FormData();
+                    formdata.append("id", id);
+                    formdata.append("username", name);
+                    formdata.append("email", email);
+                    formdata.append("address", address);
+                    formdata.append("status", "1");
+                    formdata.append("role", role);
+                    formdata.append("date_of_birth", date_of_birth);
+                    formdata.append("gender", gender);
+                    if (avatar.files[0]) formdata.append("avatar", avatar.files[0], `${avatar.files[0].name}`);
+
+
+                    const requestOptions = {
+                        method: "POST",
+                        body: formdata,
+                        redirect: "follow"
+                    };
+
+                    try {
+                        const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/user/update.php", requestOptions);
+                        const result = await response.json();
+                        console.log(result)
+                        if (result.code == 1) {
+                            window.location.href = "?action=list";
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    };
+                });
+
+
+            </script>
         </div>
     </div>
-
-
-    <script>
-        document.getElementById('submit').addEventListener('click', async function () {
-            var username = document.getElementById('name')?.value;
-            var email = document.getElementById('email')?.value;
-            var password = document.getElementById('password')?.value;
-            var gender = document.getElementById('gender')?.value;
-            var date_of_birth = document.getElementById('date')?.value;
-            var address = document.getElementById('address')?.value;
-            var status = "1";
-            var role = "user";
-            var avatar = document.getElementById('avatar');
-            if (username === "" || email === "" || password === "" || gender === "" || date_of_birth === "" || address === "") {
-                window.location.href = '?action=failed';
-                return false;
-            }
-            if (avatar.files[0] === undefined) {
-
-                const formdata = new FormData();
-                formdata.append("username", username);
-                formdata.append("password", password);
-                formdata.append("email", email);
-                formdata.append("address", address);
-                formdata.append("status", status);
-                formdata.append("role", role);
-                formdata.append("date_of_birth", date_of_birth);
-                formdata.append("gender", gender);
-
-                const requestOptions = {
-                    method: "POST",
-                    body: formdata,
-                    redirect: "follow"
-                };
-
-                const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/user/create.php", requestOptions)
-                const result = await response.json();
-                console.log(result);
-                if (result.code == 1) {
-                    window.location.href = '?action=avatar';
-                }
-                return false;
-            }
-
-            const formdata = new FormData();
-            formdata.append("username", username);
-            formdata.append("password", password);
-            formdata.append("email", email);
-            formdata.append("address", address);
-            formdata.append("status", status);
-            formdata.append("role", role);
-            formdata.append("date_of_birth", date_of_birth);
-            formdata.append("gender", gender);
-            formdata.append("avatar", avatar.files[0], `${avatar.files[0].name}`);
-
-            const requestOptions = {
-                method: "POST",
-                body: formdata,
-                redirect: "follow"
-            };
-
-            const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/user/create.php", requestOptions)
-            const result = await response.json();
-            if (result.code == 1) {
-                window.location.href = '?action=list';
-            }
-
-        })
-    </script>
-
-
-
 </body>
 
 </html>

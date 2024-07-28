@@ -53,6 +53,8 @@ class User
         $this->address = $row["address"];
         $this->status = $row["status"];
         $this->avatar = $row["avatar"];
+        $this->date_of_birth = $row["date_of_birth"];
+        $this->gender = $row["gender"];
     }
 
     public function error404($message)
@@ -74,11 +76,40 @@ class User
         $email = htmlspecialchars($input["email"]);
         $address = htmlspecialchars($input["address"]);
         $status = htmlspecialchars($input["status"]);
+        $role = htmlspecialchars($input["role"]);
+        $gender = htmlspecialchars($input["gender"]);
+        $date_of_birth = htmlspecialchars($input["date_of_birth"]);
+
 
         if (empty(trim($username))) {
             return $this->error404("Please enter number");
         } elseif (empty(trim($password))) {
             return $this->error404("Please enter password");
+        } elseif (!$_FILES['avatar']) {
+            $query = "INSERT INTO {$this->table_name} (username, password, email, address, status, role, date_of_birth, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([$username, $password, $email, $address, $status, $role, $date_of_birth, $gender]);
+
+            $data = [
+                "code" => 1,
+                "status" => 201,
+                "msg" => "User Created Successfully!",
+                'data' => [
+                    "id" => $this->connection->lastInsertId(),
+                    'username' => $username,
+                    'password' => $password,
+                    'email' => $email,
+                    'address' => $address,
+                    'role' => $role,
+                    'status' => $status,
+                    'avatar' => '-',
+                    'date_of_birth' => $date_of_birth,
+                    'gender' => $gender,
+                ]
+            ];
+            http_response_code(201); // Set HTTP response code
+
+            return json_encode($data, JSON_PRETTY_PRINT);
         } else {
             try {
                 if ($_FILES["avatar"]["error"] === 4) {
@@ -109,9 +140,9 @@ class User
 
                         move_uploaded_file($tmpName, $uploadFile);
                         $avatar = $newImageName;
-                        $query = "INSERT INTO users (username, password, email, address, status, avatar, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        $query = "INSERT INTO {$this->table_name} (username, password, email, address, status, avatar, role, date_of_birth, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $this->connection->prepare($query);
-                        $stmt->execute([$username, $password, $email, $address, $status, $avatar, 'user']);
+                        $stmt->execute([$username, $password, $email, $address, $status, $avatar, $role, $date_of_birth, $gender]);
 
                         $data = [
                             "code" => 1,
@@ -123,9 +154,11 @@ class User
                                 'password' => $password,
                                 'email' => $email,
                                 'address' => $address,
-                                'role' => 'user',
+                                'role' => $role,
                                 'status' => $status,
-                                'avatar' => $avatar
+                                'avatar' => $avatar,
+                                'date_of_birth' => $date_of_birth,
+                                'gender' => $gender,
                             ]
                         ];
                         http_response_code(201); // Set HTTP response code
@@ -157,6 +190,8 @@ class User
         $address = htmlspecialchars($input["address"]);
         $status = htmlspecialchars($input["status"]);
         $role = htmlspecialchars($input["role"]);
+        $date_of_birth = htmlspecialchars($input["date_of_birth"]);
+        $gender = htmlspecialchars($input["gender"]);
 
         if (empty(trim($username))) {
             return $this->error404("Please enter a username");
@@ -164,11 +199,34 @@ class User
             return $this->error404("Please enter an email");
         } elseif (empty(trim($address))) {
             return $this->error404("Please enter an address");
+        } elseif (!$_FILES['avatar']) {
+            $query = "UPDATE {$this->table_name} SET username = ?, email = ?, address = ?, status= ?, role = ?, date_of_birth = ?, gender = ? WHERE id = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([$username, $email, $address, $status, $role, $date_of_birth, $gender, $user_id]);
+
+            $data = [
+                "code" => 1,
+                "status" => 201,
+                "msg" => "User Updated Successfully!",
+                'data' => [
+                    'id' => $user_id,
+                    'username' => $username,
+                    'email' => $email,
+                    'address' => $address,
+                    'status' => $status,
+                    'role' => $role,
+                    'date_of_birth' => $date_of_birth,
+                    'gender' => $gender,
+                ]
+            ];
+            http_response_code(201); // Set HTTP response code
+
+            return json_encode($data, JSON_PRETTY_PRINT);
         } else {
             try {
                 // $avatar = null;
-                if ($_FILES["avatar"]["error"] === 4) {
-                    # Image does not exist
+                if ($_FILES["avatar"]["error"] == 4) {
+                    return $this->error404("No image selected");
                 } else {
                     $fileName = $_FILES['avatar']['name'];
                     $fileSize = $_FILES['avatar']['size'];
@@ -198,9 +256,9 @@ class User
 
 
 
-                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ?, role = ? WHERE id = ?";
+                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ?, role = ?, date_of_birth = ?, gender = ? WHERE id = ?";
                         $stmt = $this->connection->prepare($query);
-                        $stmt->execute([$username, $email, $address, $status, $avatar, strtolower($role), $user_id]);
+                        $stmt->execute([$username, $email, $address, $status, $avatar, strtolower($role), $date_of_birth, $gender, $user_id]);
 
                         $data = [
                             "code" => 1,
@@ -214,6 +272,8 @@ class User
                                 'status' => $status,
                                 'role' => $role,
                                 'avatar' => $avatar,
+                                'date_of_birth' => $date_of_birth,
+                                'gender' => $gender,
                             ]
                         ];
                         http_response_code(201); // Set HTTP response code

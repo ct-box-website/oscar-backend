@@ -30,7 +30,9 @@ if ($num > 0) {
             'address' => $address,
             'status' => $status,
             'role' => $role,
-            'avatar' => $avatar
+            'avatar' => $avatar,
+            'date_of_birth' => $date_of_birth,
+            'gender' => $gender,
         ];
         array_push($users['data'], $data);
     }

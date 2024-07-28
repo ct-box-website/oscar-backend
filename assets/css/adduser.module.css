@@ -93,6 +93,10 @@ input[type="password"]::placeholder{
     color: #a1a1a1;
     font-weight: 400;
 }
+input[type="date"]::placeholder{
+    color: #a1a1a1;
+    font-weight: 400;
+}
 input[type="file"]{
     display: none;
 }
