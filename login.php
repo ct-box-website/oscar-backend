@@ -2,7 +2,7 @@
 
 session_start();
 
-if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
+if (isset($_SESSION['username']) && isset($_SESSION['token'])) {
     header("location: {$path}index.php");
     die();
 }
@@ -135,7 +135,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['loggedin'])) {
                 if ($user["password"] === (string) $password) {
                     $msg = "Logged in successfully. Redirecting... 4 second";
                     $toast = true;
-                    $_SESSION['loggedin'] = true;
+                    $_SESSION['token'] = hash('sha256', uniqid());
                     $_SESSION['username'] = $user["username"];
                     $_SESSION['id'] = $user["id"];
 

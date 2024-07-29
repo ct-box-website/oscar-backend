@@ -2,7 +2,7 @@
 session_start();
 $path = $_SERVER['REQUEST_URI'];
 
-if (!isset($_SESSION['username']) && !isset($_SESSION['loggedin'])) {
+if (!isset($_SESSION['username']) && !isset($_SESSION['token'])) {
   header("location: {$path}login.php");
   die();
 }
