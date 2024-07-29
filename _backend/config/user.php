@@ -388,6 +388,38 @@ class User
         }
     }
 
+    public function updateWhileLogin($input)
+    {
+        $user_id = htmlspecialchars($input["id"]);
+        $token = md5(uniqid(rand(), true));
+        if ($user_id != "") {
+
+            $query = "UPDATE users SET token =? WHERE id =?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([$token, $user_id]);
+            $data = [
+                "code" => 1,
+                "status" => 201,
+                "msg" => "Token updated successfully!",
+                'data' => [
+                    'id' => $user_id,
+                    'token' => $token
+                ]
+            ];
+        } else {
+            $data = [
+                "code" => 0,
+                "status" => 400,
+                "msg" => "User ID is required"
+            ];
+            http_response_code(400); // Set HTTP response code for bad request
+            return json_encode($data, JSON_PRETTY_PRINT);
+        }
+        http_response_code(201); // Set HTTP response code
+
+        return json_encode($data, JSON_PRETTY_PRINT);
+    }
+
 }
 
 ?>

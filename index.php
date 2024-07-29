@@ -6,7 +6,6 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['token'])) {
   header("location: {$path}login.php");
   die();
 }
-
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 ?>

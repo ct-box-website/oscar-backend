@@ -135,9 +135,32 @@ if (isset($_SESSION['username']) && isset($_SESSION['token'])) {
                 if ($user["password"] === (string) $password) {
                     $msg = "Logged in successfully. Redirecting... 4 second";
                     $toast = true;
-                    $_SESSION['token'] = hash('sha256', uniqid());
+                    $_SESSION['token'] = md5(uniqid(rand(), true)); // Generate a unique;
                     $_SESSION['username'] = $user["username"];
                     $_SESSION['id'] = $user["id"];
+
+                    // Update user token
+                    $curl = curl_init();
+                    curl_setopt_array(
+                        $curl,
+                        array(
+                            CURLOPT_URL => 'http://localhost/assignment/oscar-backend/_backend/api/user/updateWhileLogin.php',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => "id={$user['id']}",
+                            CURLOPT_HTTPHEADER => array(
+                                'Content-Type: application/x-www-form-urlencoded'
+                            ),
+                        )
+                    );
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+
 
                     sleep(2);
                     header("Location: http://localhost/assignment/oscar-backend/index.php");

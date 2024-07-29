@@ -33,6 +33,7 @@ if ($num > 0) {
             'avatar' => $avatar,
             'date_of_birth' => $date_of_birth,
             'gender' => $gender,
+            'token' => $token,
         ];
         array_push($users['data'], $data);
     }
