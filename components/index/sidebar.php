@@ -230,17 +230,17 @@ curl_close($curl);
                                 </a>
                             </li>
                             <li>
-                                <a href="tables/checkin.php">
+                                <a href="?action=checkin">
                                     <span class="sub-item">Check-in</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="tables/checkout.php">
+                                <a href="?action=checkout">
                                     <span class="sub-item">Check-out</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="pages/history.php">
+                                <a href="history.php">
                                     <span class="sub-item">History</span>
                                 </a>
                             </li>
@@ -291,21 +291,21 @@ curl_close($curl);
                     </div>
                 </li> -->
                 <li class="nav-item">
-                    <a href="room/">
+                    <a href="room.php?action=room">
                         <i class="fa-solid fa-person-shelter"></i>
                         <p>Room</p>
                         <!-- <span class="badge badge-secondary">1</span> -->
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="room/spa.php">
+                    <a href="spa.php">
                         <i class="fa-solid fa-spa"></i>
                         <p>Massage & Spa</p>
                         <!-- <span class="badge badge-secondary">1</span> -->
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="widgets.php">
+                    <a href="content.php">
                         <i class="fas fa-desktop"></i>
                         <p>Contents</p>
                         <!-- <span class="badge badge-success">4</span> -->

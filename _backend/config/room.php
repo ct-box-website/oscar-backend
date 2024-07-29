@@ -19,6 +19,17 @@ class Room
         return $stmt;
     }
 
+    public function readLimit()
+    {
+        $limit = $_GET['limit'];
+        $page = $_GET['page'];
+        $start = ($page - 1) * $limit;
+        $query = "SELECT * FROM {$this->table_name} INNER JOIN {$this->category_table} ON {$this->table_name}.category_id={$this->category_table}.id LIMIT $start, $limit";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function readById()
     {
         $query = "SELECT * FROM {$this->table_name} WHERE id = ?";
@@ -27,10 +38,16 @@ class Room
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->username = $row["username"];
-        $this->password = $row["password"];
-        $this->email = $row["email"];
-        $this->address = $row["address"];
+        $this->id = $row['id'];
+        $this->title = $row['title'];
+        $this->description = $row['description'];
+        $this->category_id = $row['category_id'];
+        $this->price = $row['price'];
+        $this->status = $row['status'];
+        $this->scale = $row['scale'];
+        $this->images = $row['images'];
+        $this->created_at = $row['created_at'];
+        $this->updated_at = $row['updated_at'];
     }
 
     public function error404($message)
@@ -47,42 +64,95 @@ class Room
 
     public function create($input)
     {
-        $username = htmlspecialchars($input["username"]);
-        $password = htmlspecialchars($input["password"]);
-        $email = htmlspecialchars($input["email"]);
-        $address = htmlspecialchars($input["address"]);
 
-        if (empty(trim($username))) {
-            return $this->error404("Please enter number");
-        } elseif (empty(trim($password))) {
-            return $this->error404("Please enter password");
+
+
+        $title = htmlspecialchars($input['title']);
+        $description = htmlspecialchars($input['description']);
+        $price = htmlspecialchars($input['price']);
+        $category_id = htmlspecialchars($input['category_id']);
+        $scale = htmlspecialchars($input['scale']);
+        $status = 1;
+
+
+
+        if (empty(trim($title))) {
+            return $this->error404("Please enter title");
+        } elseif (empty(trim($price))) {
+            return $this->error404("Please enter price");
+        } elseif (empty(trim($category_id))) {
+            return $this->error404("Please enter category_id");
+        } elseif (empty(trim($scale))) {
+            return $this->error404("Please enter scale");
+        } elseif (empty(trim($status))) {
+            return $this->error404("Please enter status");
+        } elseif ($_FILES["images"]["error"] == 4) {
+            return $this->error404("No image selected");
         } else {
             try {
-                $query = "INSERT INTO {$this->table_name} (username, password, email, address) VALUES (?, ?, ?, ?)";
-                $stmt = $this->connection->prepare($query);
-                $stmt->execute([$username, $password, $email, $address]);
+                $fileName = $_FILES['images']['name'];
+                $tmpName = $_FILES['images']['tmp_name'];
+                $folder = __DIR__ . '/avatar/';
 
-                $data = [
-                    "code" => 1,
-                    "status" => 201,
-                    "msg" => "User Created Successfully!",
-                    'data' => [
-                        "id" => $this->connection->lastInsertId(),
-                        'username' => $username,
-                        'password' => $password,
-                        'email' => $email,
-                        'address' => $address
-                    ]
-                ];
-                http_response_code(201); // Set HTTP response code
+                $validImagesExtension = ['jpg', 'jpeg', 'png'];
 
-                return json_encode($data, JSON_PRETTY_PRINT);
+                $imagesExtension = explode('.', $fileName);
+                $imagesExtension = strtolower(end($imagesExtension));
 
+                if (!in_array($imagesExtension, $validImagesExtension)) {
+                    #Images not support
+                } else {
+                    $newImageName = uniqid();
+                    $newImageName .= '.' . $imagesExtension;
+
+                    if (!is_dir($folder)) {
+                        mkdir($folder, 0777, true);
+                    }
+
+                    $uploadFile = $folder . basename($newImageName);
+
+                    move_uploaded_file($tmpName, $uploadFile);
+                    $images = $newImageName;
+
+                    $query = "INSERT INTO {$this->table_name} (title, description, category_id, price, status, scale, images, created_at) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+                    $stmt = $this->connection->prepare($query);
+                    $stmt->execute([
+                        $title,
+                        $description,
+                        $category_id,
+                        $price,
+                        $status,
+                        $scale,
+                        $images,
+                        date('Y-m-d H:i:s')
+                    ]);
+
+                    $data = [
+                        "code" => 1,
+                        "status" => 201,
+                        "msg" => "Room Added Successfully!",
+                        'data' => [
+                            "id" => $this->connection->lastInsertId(),
+                            "title" => $title,
+                            "description" => $description,
+                            "category_id" => $category_id,
+                            "price" => $price,
+                            "status" => $status,
+                            "scale" => $scale,
+                            "images" => $images,
+                            "created_at" => date('Y-m-d H:i:s'),
+                            "updated_at" => date('Y-m-d H:i:s'),
+                        ]
+                    ];
+                    http_response_code(201); // Set HTTP response code
+
+                    return json_encode($data, JSON_PRETTY_PRINT);
+                }
             } catch (PDOException $e) {
                 $data = [
                     "code" => 0,
                     "status" => 500,
-                    "msg" => "Internal Server Error: " . $e->getMessage()
+                    "msg" => "Internal Server Error: " . $e->getMessage(),
                 ];
                 http_response_code(500); // Set HTTP response code
 

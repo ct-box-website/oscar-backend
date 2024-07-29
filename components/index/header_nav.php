@@ -22,7 +22,12 @@ session_start();
             <div class="ms-md-auto py-2 py-md-0">
                 <form action="" method="GET">
                     <a href="user.php" class="btn btn-label-info btn-round me-2">Manage</a>
-                    <a href="?action=adduser" class="btn btn-primary btn-round">Add User</a>
+                    <a href="?action=<?php echo isset($_GET['action']) != 'room' ? 'adduser' : 'addroom' ?>"
+                        class="btn btn-primary btn-round">
+                        <?php
+                        echo isset($_GET['action']) != 'room' ? 'Add User' : 'Add Room';
+                        ?>
+                    </a>
                 </form>
             </div>
         <?php } ?>
