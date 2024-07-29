@@ -33,6 +33,7 @@ if (isset($_POST["id"])) {
                 'avatar' => $user->avatar,
                 'date_of_birth' => $user->date_of_birth,
                 'gender' => $user->gender,
+                'token' => $user->token
             ];
 
             $data = [

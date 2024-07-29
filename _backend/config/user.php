@@ -55,6 +55,7 @@ class User
         $this->avatar = $row["avatar"];
         $this->date_of_birth = $row["date_of_birth"];
         $this->gender = $row["gender"];
+        $this->token = $row["token"];
     }
 
     public function error404($message)
@@ -79,6 +80,7 @@ class User
         $role = htmlspecialchars($input["role"]);
         $gender = htmlspecialchars($input["gender"]);
         $date_of_birth = htmlspecialchars($input["date_of_birth"]);
+        $token = md5(uniqid(rand(), true));
 
 
         if (empty(trim($username))) {
@@ -86,9 +88,9 @@ class User
         } elseif (empty(trim($password))) {
             return $this->error404("Please enter password");
         } elseif (!$_FILES['avatar']) {
-            $query = "INSERT INTO {$this->table_name} (username, password, email, address, status, role, date_of_birth, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $query = "INSERT INTO {$this->table_name} (username, password, email, address, status, role, date_of_birth, gender, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $this->connection->prepare($query);
-            $stmt->execute([$username, $password, $email, $address, $status, $role, $date_of_birth, $gender]);
+            $stmt->execute([$username, $password, $email, $address, $status, $role, $date_of_birth, $gender, $token]);
 
             $data = [
                 "code" => 1,
@@ -105,6 +107,7 @@ class User
                     'avatar' => '-',
                     'date_of_birth' => $date_of_birth,
                     'gender' => $gender,
+                    'token' => $token
                 ]
             ];
             http_response_code(201); // Set HTTP response code
@@ -140,9 +143,9 @@ class User
 
                         move_uploaded_file($tmpName, $uploadFile);
                         $avatar = $newImageName;
-                        $query = "INSERT INTO {$this->table_name} (username, password, email, address, status, avatar, role, date_of_birth, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        $query = "INSERT INTO {$this->table_name} (username, password, email, address, status, avatar, role, date_of_birth, gender, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $this->connection->prepare($query);
-                        $stmt->execute([$username, $password, $email, $address, $status, $avatar, $role, $date_of_birth, $gender]);
+                        $stmt->execute([$username, $password, $email, $address, $status, $avatar, $role, $date_of_birth, $gender, $token]);
 
                         $data = [
                             "code" => 1,
@@ -159,6 +162,7 @@ class User
                                 'avatar' => $avatar,
                                 'date_of_birth' => $date_of_birth,
                                 'gender' => $gender,
+                                'token' => $token
                             ]
                         ];
                         http_response_code(201); // Set HTTP response code
@@ -192,6 +196,7 @@ class User
         $role = htmlspecialchars($input["role"]);
         $date_of_birth = htmlspecialchars($input["date_of_birth"]);
         $gender = htmlspecialchars($input["gender"]);
+        $token = md5(uniqid(rand(), true));
 
         if (empty(trim($username))) {
             return $this->error404("Please enter a username");
@@ -200,9 +205,9 @@ class User
         } elseif (empty(trim($address))) {
             return $this->error404("Please enter an address");
         } elseif (!$_FILES['avatar']) {
-            $query = "UPDATE {$this->table_name} SET username = ?, email = ?, address = ?, status= ?, role = ?, date_of_birth = ?, gender = ? WHERE id = ?";
+            $query = "UPDATE {$this->table_name} SET username = ?, email = ?, address = ?, status= ?, role = ?, date_of_birth = ?, gender = ?, token = ? WHERE id = ?";
             $stmt = $this->connection->prepare($query);
-            $stmt->execute([$username, $email, $address, $status, $role, $date_of_birth, $gender, $user_id]);
+            $stmt->execute([$username, $email, $address, $status, $role, $date_of_birth, $gender, $token, $user_id]);
 
             $data = [
                 "code" => 1,
@@ -217,6 +222,7 @@ class User
                     'role' => $role,
                     'date_of_birth' => $date_of_birth,
                     'gender' => $gender,
+                    'token' => $token
                 ]
             ];
             http_response_code(201); // Set HTTP response code
@@ -256,9 +262,9 @@ class User
 
 
 
-                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ?, role = ?, date_of_birth = ?, gender = ? WHERE id = ?";
+                        $query = "UPDATE users SET username = ?, email = ?, address = ?, status= ?, avatar = ?, role = ?, date_of_birth = ?, gender = ?, token = ? WHERE id = ?";
                         $stmt = $this->connection->prepare($query);
-                        $stmt->execute([$username, $email, $address, $status, $avatar, strtolower($role), $date_of_birth, $gender, $user_id]);
+                        $stmt->execute([$username, $email, $address, $status, $avatar, strtolower($role), $date_of_birth, $gender, $token, $user_id]);
 
                         $data = [
                             "code" => 1,
@@ -274,6 +280,7 @@ class User
                                 'avatar' => $avatar,
                                 'date_of_birth' => $date_of_birth,
                                 'gender' => $gender,
+                                'token' => $token
                             ]
                         ];
                         http_response_code(201); // Set HTTP response code
