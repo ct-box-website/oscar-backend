@@ -132,12 +132,16 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                             ?>
                             <?php foreach ($userData['data'] as $user) { ?>
                                 <tr style="border-bottom: 1px solid #f1f1f1;">
-                                    <td style="padding: 16px 0;"><?php echo $i ?></td>
+                                    <td style="padding: 16px 0;">
+                                        <?php echo $i ?>
+                                    </td>
                                     <td>
                                         <div
                                             style="display: flex; flex-direction: row; align-items: center; column-gap: 12px;">
+                                            <input type="checkbox" onchange="alert(`This is ${this.value}`)" name="id"
+                                                value="<?php echo $user['id'] ?>">
                                             <div style="width: 32px; height: 32px; border-radius: 8px; overflow: hidden;">
-                                                <img src="_backend/config/avatar/<?= $user['avatar'] ?>"
+                                                <img src="_backend/config/avatar/<?= $user['avatar'] ?? '66a763b83af0e.png' ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover;" />
                                             </div>
                                             <div style="font-size: 16px;"><?php echo $user['username'] ?></div>
@@ -152,17 +156,24 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                     <td style="font-size: 16px;"><?php echo $user['role'] ?></td>
                                     <td style="text-align: center;">
                                         <div
-                                            style="<?php echo $user['status'] == 1 ? "background-color: #569c68;" : "background-color: #e64e65;" ?> color: #fff; border-radius: 12px; padding: 2px 0; font-size: 12px; font-weight: 600;">
+                                            style="display: flex; align-items: center; column-gap: 5px; justify-content: center; ">
+                                            <div
+                                                style="<?php echo $user['status'] == 1 ? "background-color: #569c68;" : "background-color: #e64e65;" ?> width: 12px; height: 12px; border-radius: 20px; ">
+                                            </div>
                                             <?php echo $user['status'] == 1 ? "Active" : "Inactive" ?>
                                         </div>
                                     </td>
                                     <?php if ($_SESSION['username'] == 'admin') { ?>
                                         <td style="text-align: center">
                                             <a href="?action=edituser&id=<?php echo $user['id'] ?>"
-                                                style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">Edit</a>
+                                                style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">
+                                                <i class="fa-solid fa-pen-nib"></i> Edit
+                                            </a>
                                             <button type="button" onclick="getUserId(<?php echo $user['id'] ?>)" id="user_id"
                                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">Delete</button>
+                                                style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">
+                                                <i class="fa-solid fa-trash-can"></i> Delete
+                                            </button>
                                         </td>
                                     <?php } ?>
                                 </tr>

@@ -23,7 +23,7 @@ if ($num > 0) {
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
         $data = [
-            'id' => $id,
+            'total' => $id,
             // 'username' => $username,
             // 'password' => $password,
             // 'email' => $email,

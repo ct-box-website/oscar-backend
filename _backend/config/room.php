@@ -30,6 +30,15 @@ class Room
         return $stmt;
     }
 
+    public function readCount()
+    {
+        $query = "SELECT COUNT(id) as id FROM {$this->table_name}";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        return $stmt;
+
+    }
+
     public function readById()
     {
         $query = "SELECT * FROM {$this->table_name} WHERE id = ?";

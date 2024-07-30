@@ -187,7 +187,7 @@ curl_close($curl);
                         </ul>
                     </div>
                 </li> -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $uri === 'form.php' ? "active" : "" ?>">
                     <a data-bs-toggle="collapse" href="#forms">
                         <i class="fas fa-pen-square"></i>
                         <p>Forms</p>
@@ -212,7 +212,8 @@ curl_close($curl);
                     </div>
                 </li>
 
-                <li class="nav-item">
+                <li
+                    class="nav-item <?php echo $uri == 'booking.php' || $uri == 'booking.php?action=checkin' || $uri == 'booking.php?action=checkout' ? "active" : "" ?>">
                     <a data-bs-toggle="collapse" href="#tables">
                         <i class="fas fa-table"></i>
                         <p>Resevation</p>
@@ -290,7 +291,8 @@ curl_close($curl);
                         </ul>
                     </div>
                 </li> -->
-                <li class="nav-item">
+                <li
+                    class="nav-item <?php echo $uri == 'room.php?action=room' || $uri == 'room.php?action=addroom' ? "active" : "" ?>">
                     <a href="room.php?action=room">
                         <i class="fa-solid fa-person-shelter"></i>
                         <p>Room</p>
