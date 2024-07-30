@@ -201,9 +201,14 @@
 
             try {
                 const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/room/create.php", requestOptions);
-                const result = await response.text();
-                console.log("===", result)
+                const result = await response.json();
+                if (result.code == 1) {
+                    alert("Room created successfully");
+                    window.location.href = "?action=success";
+                }
             } catch (error) {
+                alert("Error creating room");
+                window.location.href = "?action";
                 console.error(error);
             };
         })

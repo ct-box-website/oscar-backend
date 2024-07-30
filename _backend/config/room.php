@@ -25,7 +25,7 @@ class Room
         $limit = $_GET['limit'];
         $page = $_GET['page'];
         $start = ($page - 1) * $limit;
-        $query = "SELECT * FROM {$this->table_name} INNER JOIN {$this->category_table} ON {$this->table_name}.category_id={$this->category_table}.id LIMIT $start, $limit";
+        $query = "SELECT * FROM {$this->table_name} LIMIT $start, $limit";
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -74,9 +74,6 @@ class Room
 
     public function create($input)
     {
-
-
-
         $title = htmlspecialchars($input['title']);
         $description = htmlspecialchars($input['description']);
         $price = htmlspecialchars($input['price']);
