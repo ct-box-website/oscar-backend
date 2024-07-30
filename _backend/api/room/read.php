@@ -27,11 +27,11 @@ if ($num > 0) {
             'title' => $title,
             'description' => $description,
             'category_id' => $category_id,
-            'price' => $price,
+            'price' => (float) $price,
             'status' => $status,
             'scale' => $scale,
             'images' => $images,
-            'category_name' => $category_name,
+            // 'category_name' => $category_name,
             'created_at' => $created_at,
             'updated_at' => $updated_at,
         ];

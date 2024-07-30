@@ -13,7 +13,8 @@ class Room
 
     public function readRoom()
     {
-        $query = "SELECT * FROM {$this->table_name} INNER JOIN {$this->category_table} ON {$this->table_name}.category_id={$this->category_table}.id";
+        // $query = "SELECT * FROM {$this->table_name} INNER JOIN {$this->category_table} ON {$this->table_name}.category_id={$this->category_table}.id";
+        $query = "SELECT * FROM {$this->table_name}";
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -82,6 +83,7 @@ class Room
         $category_id = htmlspecialchars($input['category_id']);
         $scale = htmlspecialchars($input['scale']);
         $status = 1;
+        $images = htmlspecialchars($input['images']);
 
 
 
@@ -99,64 +101,40 @@ class Room
             return $this->error404("No image selected");
         } else {
             try {
-                $fileName = $_FILES['images']['name'];
-                $tmpName = $_FILES['images']['tmp_name'];
-                $folder = __DIR__ . '/avatar/';
+                $query = "INSERT INTO {$this->table_name} (title, description, category_id, price, status, scale, images, created_at) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+                $stmt = $this->connection->prepare($query);
+                $stmt->execute([
+                    $title,
+                    $description,
+                    $category_id,
+                    $price,
+                    $status,
+                    $scale,
+                    $images,
+                    date('Y-m-d H:i:s')
+                ]);
 
-                $validImagesExtension = ['jpg', 'jpeg', 'png'];
+                $data = [
+                    "code" => 1,
+                    "status" => 201,
+                    "msg" => "Room Added Successfully!",
+                    'data' => [
+                        "id" => $this->connection->lastInsertId(),
+                        "title" => $title,
+                        "description" => $description,
+                        "category_id" => $category_id,
+                        "price" => $price,
+                        "status" => $status,
+                        "scale" => $scale,
+                        "images" => $images,
+                        "created_at" => date('Y-m-d H:i:s'),
+                        "updated_at" => date('Y-m-d H:i:s'),
+                    ]
+                ];
+                http_response_code(201); // Set HTTP response code
 
-                $imagesExtension = explode('.', $fileName);
-                $imagesExtension = strtolower(end($imagesExtension));
+                return json_encode($data, JSON_PRETTY_PRINT);
 
-                if (!in_array($imagesExtension, $validImagesExtension)) {
-                    #Images not support
-                } else {
-                    $newImageName = uniqid();
-                    $newImageName .= '.' . $imagesExtension;
-
-                    if (!is_dir($folder)) {
-                        mkdir($folder, 0777, true);
-                    }
-
-                    $uploadFile = $folder . basename($newImageName);
-
-                    move_uploaded_file($tmpName, $uploadFile);
-                    $images = $newImageName;
-
-                    $query = "INSERT INTO {$this->table_name} (title, description, category_id, price, status, scale, images, created_at) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
-                    $stmt = $this->connection->prepare($query);
-                    $stmt->execute([
-                        $title,
-                        $description,
-                        $category_id,
-                        $price,
-                        $status,
-                        $scale,
-                        $images,
-                        date('Y-m-d H:i:s')
-                    ]);
-
-                    $data = [
-                        "code" => 1,
-                        "status" => 201,
-                        "msg" => "Room Added Successfully!",
-                        'data' => [
-                            "id" => $this->connection->lastInsertId(),
-                            "title" => $title,
-                            "description" => $description,
-                            "category_id" => $category_id,
-                            "price" => $price,
-                            "status" => $status,
-                            "scale" => $scale,
-                            "images" => $images,
-                            "created_at" => date('Y-m-d H:i:s'),
-                            "updated_at" => date('Y-m-d H:i:s'),
-                        ]
-                    ];
-                    http_response_code(201); // Set HTTP response code
-
-                    return json_encode($data, JSON_PRETTY_PRINT);
-                }
             } catch (PDOException $e) {
                 $data = [
                     "code" => 0,

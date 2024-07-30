@@ -1,6 +1,8 @@
 <?php
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $limit = isset($_GET['limit']) ? $_GET['limit'] : 8;
+
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +60,16 @@ $limit = isset($_GET['limit']) ? $_GET['limit'] : 8;
                     <?php
                     $title = "Room";
                     include 'components/index/header_nav.php';
+                    ?>
+
+                    <!-- Add User Modal -->
+                    <?php
+                    if ($action == "addroom" || $action == "failed") {
+                        include "./components/form/addroom.php";
+                    }
+                    if ($action == "edituser") {
+                        include "./components/form/edituser.php";
+                    }
                     ?>
 
                     <!-- Data Table -->
