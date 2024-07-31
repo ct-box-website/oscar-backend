@@ -59,6 +59,8 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
                     <?php
                     $title = "Room";
+                    $addoption = "addroom";
+                    $disable = "";
                     include 'components/index/header_nav.php';
                     ?>
 
@@ -67,10 +69,32 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                     if ($action == "addroom" || $action == "failed") {
                         include "./components/form/addroom.php";
                     }
-                    if ($action == "edituser") {
-                        include "./components/form/edituser.php";
-                    }
                     ?>
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Are you sure want to delete this
+                                        room?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="user"
+                                        style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                    <button onclick="deleteRoom()" type="button" id="deleteButton"
+                                        class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Data Table -->
                     <div
@@ -150,7 +174,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                                 style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">
                                                 <i class="fa-solid fa-pen-nib"></i> Edit
                                             </a>
-                                            <button type="button" onclick="getUserId(<?php echo $room['id'] ?>)" id="user_id"
+                                            <button type="button" onclick="getRoomId(<?php echo $room['id'] ?>)" id="user_id"
                                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                                                 style="border: none; background-color: transparent;padding: 8px; color: #e64e65; font-weight: 600;">
                                                 <i class="fa-solid fa-trash-can"></i> Delete
@@ -164,6 +188,35 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
                         </table>
                     </div>
+
+                    <script>
+                        async function getRoomId(data) {
+                            // alert("Are you sure want to delete user with ID: " + this.value);
+                            const myHeaders = new Headers();
+                            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                            const urlencoded = new URLSearchParams();
+                            urlencoded.append("id", data);
+
+                            const requestOptions = {
+                                method: "POST",
+                                headers: myHeaders,
+                                body: urlencoded,
+                                redirect: "follow"
+                            };
+
+                            const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/room/readByID.php", requestOptions)
+                            const result = await response.json();
+                            console.log(result);
+                            document.getElementById("user").innerHTML = `
+                                <span style="font-size: 12px; font-weight: 600;" id="roomId" >${result.data.id}</span>
+                                <div style="display: flex; flex-direction: column; row-gap: -3px;" >
+                                    <span style="font-size: 15px; font-weight: 500; color: #444;" >${result.data.title}</span>
+                                </div>
+                            `
+                        }
+
+                    </script>
 
                 </div>
             </div>
@@ -193,6 +246,31 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
             </div>
         </div>
     </div>
+    <script>
+        async function deleteRoom() {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            const urlencoded = new URLSearchParams();
+            urlencoded.append("id", document.getElementById("roomId").innerText);
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: urlencoded,
+                redirect: "follow"
+            };
+
+            const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/room/deleteRoom.php", requestOptions);
+            const result = await response.json();
+            console.log(result);
+            if (result.code == 1) {
+                location.reload();
+            } else {
+                alert('Failed to delete room');
+            }
+        }
+    </script>
 
     <?php include 'assets/footer.plugins.php' ?>
 </body>

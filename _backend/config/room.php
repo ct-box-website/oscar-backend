@@ -195,7 +195,7 @@ class Room
     public function delete()
     {
         try {
-            $query = "DELETE FROM users WHERE id = ?";
+            $query = "DELETE FROM {$this->table_name} WHERE id = ?";
             $stmt = $this->connection->prepare($query);
             $stmt->bindParam(1, $this->id);
             $stmt->execute();
@@ -204,7 +204,7 @@ class Room
                 $data = [
                     "code" => 1,
                     "status" => 200,
-                    "msg" => "User Deleted Successfully!"
+                    "msg" => "Room Deleted Successfully!"
                 ];
                 http_response_code(200); // Set HTTP response code for success
                 return json_encode($data, JSON_PRETTY_PRINT);
@@ -212,7 +212,7 @@ class Room
                 $data = [
                     "code" => 0,
                     "status" => 404,
-                    "msg" => "User Not Found!"
+                    "msg" => "Room Not Found!"
                 ];
                 http_response_code(404); // Set HTTP response code for not found
                 return json_encode($data, JSON_PRETTY_PRINT);

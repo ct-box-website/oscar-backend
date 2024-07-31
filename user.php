@@ -60,6 +60,8 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
                     <?php
                     $title = "User";
+                    $addoption = "adduser";
+                    $disable = "";
                     include './components/index/header_nav.php';
                     ?>
 
@@ -80,21 +82,34 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Are you sure want to delete this
-                                        user?</h5>
+                                    <?php ?>
+                                    <h5 class="modal-title" id="staticBackdropLabel">
+                                        <?php if ($_GET['id']) {
+                                            echo "Are you sure want to delete this
+                                        user?";
+                                        } else {
+                                            echo "Please select a user to delete";
+                                        } ?>
+                                    </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
-                                    <div id="user"
-                                        style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
+                                <?php if ($_GET['id']) { ?>
+                                    <div class="modal-body">
+                                        <div id="user"
+                                            style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
 
+                                        </div>
                                     </div>
-                                </div>
+                                <?php } ?>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                    <button onclick="deleteUser()" type="button" id="deleteButton"
-                                        class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
+                                    <?php if ($_GET['id']) { ?>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                        <button onclick="deleteUser()" type="button" id="deleteButton"
+                                            class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                    <?php } ?>
 
                                 </div>
                             </div>
@@ -127,7 +142,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                             $readCountData = file_get_contents($readCountApi);
                             $readCount = json_decode($readCountData, true);
 
-                            $pages = ceil($readCount["data"][0]['id'] / $limit);
+                            $pages = ceil($readCount["data"][0]['total'] / $limit);
                             $i = $page * $limit - $limit + 1;
                             ?>
                             <?php foreach ($userData['data'] as $user) { ?>
@@ -138,8 +153,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                     <td>
                                         <div
                                             style="display: flex; flex-direction: row; align-items: center; column-gap: 12px;">
-                                            <input type="checkbox" onchange="alert(`This is ${this.value}`)" name="id"
-                                                value="<?php echo $user['id'] ?>">
+                                            <input type="checkbox" id="checkbox_id" <?php if ($_GET['id'] == $user['id'])
+                                                echo "checked" ?> onchange="location.href = `?id=${this.value}`" name="id"
+                                                    value="<?php echo $user['id'] ?>">
                                             <div style="width: 32px; height: 32px; border-radius: 8px; overflow: hidden;">
                                                 <img src="_backend/config/avatar/<?= $user['avatar'] ?? '66a763b83af0e.png' ?>"
                                                     style="width: 100%; height: 100%; object-fit: cover;" />

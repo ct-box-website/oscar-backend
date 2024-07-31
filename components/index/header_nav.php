@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+$id = $_GET['id'];
 
 ?>
 <!DOCTYPE html>
@@ -21,18 +22,25 @@ session_start();
         <?php if ($_SESSION["username"] === "admin") { ?>
             <div class="ms-md-auto py-2 py-md-0">
                 <form action="" method="GET">
-                    <a href="user.php" class="btn btn-label-info btn-round me-2">Manage</a>
-                    <a href="?action=<?php echo isset($_GET['action']) != 'room' ? 'adduser' : 'addroom' ?>"
-                        class="btn btn-primary btn-round">
-                        <?php
-                        echo isset($_GET['action']) != 'room' ? 'Add User' : 'Add Room';
-                        ?>
+                    <a href="?action" id="deletebtn" style="display: <?php echo $disable; ?>"
+                        class="btn btn-label-danger btn-round me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <i class="fa-regular fa-trash-can"></i> Delete
+                    </a>
+                    <a href="?action=<?php echo $addoption ?>" class="btn btn-primary btn-round">
+                        <i class="fa-solid fa-circle-plus"></i>
+                        Add
                     </a>
                 </form>
             </div>
         <?php } ?>
 
     </div>
+
+    <script>
+        document.getElementById('deletebtn').addEventListener('click', function () {
+            getUserId(<?php echo $id ?>);
+        });
+    </script>
 
 </body>
 

@@ -119,6 +119,8 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 
           <?php
           $title = "Dashboard";
+          $addoption = "adduser";
+          $disable = "none";
           include './components/index/header_nav.php';
           ?>
 

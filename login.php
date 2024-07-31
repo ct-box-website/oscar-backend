@@ -120,19 +120,13 @@ if (isset($_SESSION['username']) && isset($_SESSION['token'])) {
             $userData = json_decode($data, true);
             $user = null;
             foreach ($userData['data'] as $u) {
-                if ($u["username"] == $username) {
+                if ($u["username"] === $username) {
                     $user = $u;
-                    break;
-                } else {
-                    $toast = true;
-                    $msg = "Username not found.";
-                    $type = "error";
-                    $user = null;
                     break;
                 }
             }
             if ($user) {
-                if ($user["password"] === (string) $password) {
+                if ($user["password"] == (string) $password) {
                     $msg = "Logged in successfully. Redirecting... 4 second";
                     $toast = true;
                     $_SESSION['token'] = md5(uniqid(rand(), true)); // Generate a unique;

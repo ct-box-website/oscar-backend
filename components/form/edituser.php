@@ -88,6 +88,7 @@ curl_close($curl);
                                 </option>
                                 <option value="manager">Manager</option>
                                 <option value="user">User</option>
+                                <option value="editor">Editor</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
