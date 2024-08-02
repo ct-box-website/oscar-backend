@@ -1,4 +1,32 @@
 <?php
+$room_id = $_GET['id'];
+$curl = curl_init();
+
+curl_setopt_array(
+    $curl,
+    array(
+        CURLOPT_URL => 'http://localhost/assignment/oscar-backend/_backend/api/room/readById.php',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => "id=$room_id",
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded'
+        ),
+    )
+);
+
+$response = curl_exec($curl);
+$data = json_decode($response, true);
+$room = $data['data'];
+curl_close($curl);
+
+$images = explode(',', $room['images']);
+
 
 ?>
 
@@ -16,7 +44,7 @@
 
     <div class="co">
         <div class="form-header">
-            <span>Add Room</span>
+            <span>Update Room</span>
             <a href="?action" style="font-size: 18px;"><i class="fa-solid fa-xmark"></i></a>
         </div>
 
@@ -26,22 +54,26 @@
                 <div class="form">
 
                     <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" class="input" placeholder="Title">
+                    <input type="text" value="<?php echo $room['title'] ?>" id="title" name="title" class="input"
+                        placeholder="Title">
 
                     <label for="description">Description:</label>
-                    <textarea id="description" name="description" rows="4" class="input" cols="50"></textarea>
+                    <textarea id="description" name="description" rows="4" class="input" cols="50">
+                        <?php echo $room['description'] ?>
+                    </textarea>
 
                     <label for="category">Category:</label>
                     <select id="category" name="category" class="input-select">
-                        <option value="">Select room type</option>
+                        <option value="<?php echo $room['category_id'] ?>"><?php echo $room['category_id'] ?></option>
                     </select>
 
                     <label for="price">Price:</label>
-                    <input type="number" id="price" name="price" class="input" placeholder="Price $" min="0">
+                    <input type="number" id="price" value="<?php echo $room['price'] ?>" name="price" class="input"
+                        placeholder="Price $" min="0">
 
                     <label for="scale">Capacity:</label>
                     <select id="capacity" name="scale" class="input-select">
-                        <option value="">Select capacity</option>
+                        <option value="<?php echo $room['scale'] ?>"><?php echo $room['scale'] ?></option>
                         <option value="2-3">2-3 People</option>
                         <option value="3-4">3-4 People</option>
                         <option value="4-5">4-5 People</option>
@@ -53,30 +85,30 @@
                 <span style="">Upload Images:</span>
                 <div class="image-con">
                     <label class="image" for="image1">
-                        <i class="fa-regular fa-image" id="icon1" style="display: block;"></i>
-                        <img src="" alt="" class="image_show" id="showImage1"
-                            style="display: none;  width: 100%; height: 100%; object-fit: contain; border-radius: 6px;">
+                        <i class="fa-regular fa-image" id="icon1" style="display: none;"></i>
+                        <img src="<?php echo $images[0] ?>" alt="" class="image_show" id="showImage1"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
                     </label>
                     <input type="file" name="images" onchange="console.log('Are ok')" id="image1">
 
                     <label class="image" for="image2">
-                        <i class="fa-regular fa-image" id="icon2" style="display: block;"></i>
-                        <img src="" alt="" class="image_show" id="showImage2"
-                            style="display: none;  width: 100%; height: 100%; object-fit: contain; border-radius: 6px;">
+                        <i class="fa-regular fa-image" id="icon2" style="display: none;"></i>
+                        <img src="<?php echo $images[1] ?>" alt="" class="image_show" id="showImage2"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
                     </label>
                     <input type="file" name="images" id="image2">
 
                     <label class="image" for="image3">
-                        <i class="fa-regular fa-image" id="icon3" style="display: block;"></i>
-                        <img src="" alt="" class="image_show" id="showImage3"
-                            style="display: none;  width: 100%; height: 100%; object-fit: contain; border-radius: 6px;">
+                        <i class="fa-regular fa-image" id="icon3" style="display: none;"></i>
+                        <img src="<?php echo $images[2] ?>" alt="" class="image_show" id="showImage3"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
                     </label>
                     <input type="file" name="images" id="image3">
 
                     <label class="image" for="image4">
-                        <i class="fa-regular fa-image" id="icon4" style="display: block;"></i>
-                        <img src="" alt="" class="image_show" id="showImage4"
-                            style="display: none;  width: 100%; height: 100%; object-fit: contain; border-radius: 6px;">
+                        <i class="fa-regular fa-image" id="icon4" style="display: none;"></i>
+                        <img src="<?php echo $images[3] ?>" alt="" class="image_show" id="showImage4"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
                     </label>
                     <input type="file" name="images" id="image4">
                 </div>

@@ -84,32 +84,26 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                 <div class="modal-header">
                                     <?php ?>
                                     <h5 class="modal-title" id="staticBackdropLabel">
-                                        <?php if ($_GET['id']) {
-                                            echo "Are you sure want to delete this
-                                        user?";
-                                        } else {
-                                            echo "Please select a user to delete";
-                                        } ?>
+
+                                        Are you sure want to delete this
+                                        user?
+
                                     </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <?php if ($_GET['id']) { ?>
-                                    <div class="modal-body">
-                                        <div id="user"
-                                            style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
 
-                                        </div>
+                                <div class="modal-body">
+                                    <div id="user"
+                                        style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
+
                                     </div>
-                                <?php } ?>
+                                </div>
                                 <div class="modal-footer">
-                                    <?php if ($_GET['id']) { ?>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                        <button onclick="deleteUser()" type="button" id="deleteButton"
-                                            class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
-                                    <?php } else { ?>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                    <?php } ?>
+
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                    <button onclick="deleteUser()" type="button" id="deleteButton"
+                                        class="btn btn-primary" data-bs-dismiss="modal">Sure</button>
 
                                 </div>
                             </div>

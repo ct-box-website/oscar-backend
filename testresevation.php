@@ -260,8 +260,10 @@ if (isset($_POST['username']) && isset($_POST['room-type']) && isset(($_POST["ad
                         style="background-color: #fff; padding: 20px; display: flex; flex-direction: column; row-gap: 10px; border-radius: 8px; box-shadow: 0 0 25px rgba(0, 0, 0, 0.1); ">
 
                     </div>
-                    <input type="text" class="input" id="days" name="days" value="" placeholder="" disabled required>
-                    <input type="text" class="input" id="price" name="price" value="" placeholder="" disabled required>
+                    <input type="text" class="input" id="days" name="days" value="" placeholder="Days" disabled
+                        required>
+                    <input type="text" class="input" id="price" name="price" value="" placeholder="Total ($)" disabled
+                        required>
 
                     <input type="submit" class="button" id="buttonSubmit" value="Booking Now">
                 </div>

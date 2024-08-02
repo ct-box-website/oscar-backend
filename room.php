@@ -69,6 +69,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                     if ($action == "addroom" || $action == "failed") {
                         include "./components/form/addroom.php";
                     }
+                    if ($action == "editroom") {
+                        include "./components/form/editroom.php";
+                    }
                     ?>
                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -170,7 +173,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                     </td>
                                     <?php if ($_SESSION['username'] == 'admin') { ?>
                                         <td style="text-align: center">
-                                            <a href="?action=edituser&id=<?php echo $room['id'] ?>"
+                                            <a href="?action=editroom&id=<?php echo $room['id'] ?>"
                                                 style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">
                                                 <i class="fa-solid fa-pen-nib"></i> Edit
                                             </a>
