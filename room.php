@@ -12,6 +12,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room</title>
+    <link rel="stylesheet" href="assets/css/user.module.css">
     <?php include 'assets/header.plugins.php' ?>
     <script src="https://kit.fontawesome.com/83db4bf7c9.js" crossorigin="anonymous"></script>
 
@@ -101,25 +102,24 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
                     <!-- Data Table -->
                     <div
-                        style="overflow-x: auto; background-color: #fff; padding: 16px 16px 26px 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1);">
-                        <table style="width: 100%;">
-
+                        style="display: block; overflow-x: auto; white-space: nowrap; background-color: #fff; padding: 16px 16px 26px 16px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.1);">
+                        <table>
                             <tr>
-                                <th style="padding: 0 0 16px 0 ;">No</th>
-                                <th style="padding: 0 0 16px 0 ;">Title</th>
+                                <th style="padding: 0 20px 16px 0 ;">No</th>
+                                <th style="padding: 0 50px 16px 0 ; ">Title</th>
                                 <th style="padding: 0 0 16px 0 ;">Description</th>
-                                <th style="padding: 0 0 16px 0 ;">Category</th>
-                                <th style="padding: 0 0 16px 0 ;">Price</th>
-                                <th style="padding: 0 0 16px 0 ;">Capacity</th>
-                                <th style="padding: 0 0 16px 0 ;">Images</th>
-                                <th style="text-align: center; padding: 0 0 16px 0 ;">Status</th>
+                                <th style="padding: 0 0 16px 20px ;">Category</th>
+                                <th style="padding: 0 0 16px 40px ;">Price</th>
+                                <th style="padding: 0 0 16px 40px ;">Capacity</th>
+                                <th style="padding: 0 0 16px 40px ;">Images</th>
+                                <th style="text-align: center; padding: 0 0 16px 40px ;">Status</th>
                                 <?php if ($_SESSION['username'] == 'admin') { ?>
-                                    <th style="text-align: center; padding: 0 0 16px 0 ;">Action</th>
+                                    <th style="text-align: center; padding: 0 0 16px 40px ;">Action</th>
                                 <?php } ?>
                             </tr>
 
                             <?php
-                            $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/room/readLimit.php?page={$page}&limit={$limit}";
+                            $apiUrl = "http://localhost/assignment/oscar-backend/_backend/api/room/readLimit.php?page=$page&limit=$limit";
                             $data = file_get_contents($apiUrl);
                             $roomData = json_decode($data, true);
 
@@ -127,13 +127,15 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                             $readCountData = file_get_contents($readCountApi);
                             $readCount = json_decode($readCountData, true);
 
-                            $pages = ceil($readCount["data"][0]['id'] / $limit);
+                            $pages = ceil($readCount["data"][0]['total'] / $limit);
                             $i = $page * $limit - $limit + 1;
                             ?>
 
                             <?php foreach ($roomData['data'] as $room) { ?>
                                 <tr style="border-bottom: 1px solid #f1f1f1;">
+
                                     <td style="padding: 16px 0;"><?php echo $i ?></td>
+
                                     <td style="width: 170px; padding-right: 10px;">
                                         <div
                                             style="display: flex; flex-direction: row; align-items: center; column-gap: 12px;">
@@ -147,24 +149,36 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                                 <?php echo $room['title'] ?>
                                             </div>
                                     </td>
-                                    <td style="font-size: 14px; width: 200px;"><?php echo $room['description'] ?></td>
-                                    <td style="font-size: 16px;"><?php echo $room['category_id'] ?></td>
+
+                                    <td style="font-size: 14px;">
+                                        <div
+                                            style="white-space: nowrap; overflow: hidden; width: 300px; text-overflow: ellipsis;">
+                                            <?php echo $room['description'] ?>
+                                        </div>
+                                    </td>
+
                                     <td style="font-size: 16px;">
+                                        <div style="padding-left: 20px;">
+                                            <?php echo $room['category_id'] ?>
+                                        </div>
+                                    </td>
+
+                                    <td style="font-size: 16px; padding-left: 40px;">
                                         <i class="fa-solid fa-sack-dollar"
                                             style="color: #ffc105 ; font-size: 16px; margin-right: 6px;"></i>
                                         <?php echo "$ " . $room['price'] ?>
                                     </td>
-                                    <td style="font-size: 16px;">
+                                    <td style="font-size: 16px; padding-left: 40px;">
                                         <i class="fa-solid fa-users" style="margin-right: 5px; font-size: 14px;"></i>
                                         <?php echo $room['scale'] ?>
                                     </td>
-                                    <td style="font-size: 16px;">
+                                    <td style="font-size: 16px; padding-left: 40px;">
                                         <i class="fa-solid fa-image" style="color: #6d05ff; font-size: 16px;"></i>
                                         <?php echo '2+' ?>
                                     </td>
                                     <td>
                                         <div
-                                            style="display: flex; align-items: center; column-gap: 5px; justify-content: center; ">
+                                            style="display: flex; align-items: center; column-gap: 5px; justify-content: center; padding-left: 40px; ">
                                             <div
                                                 style="<?php echo $room['status'] == 1 ? "background-color: #569c68;" : "background-color: #e64e65;" ?> width: 12px; height: 12px; border-radius: 20px; ">
                                             </div>
@@ -172,7 +186,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                         </div>
                                     </td>
                                     <?php if ($_SESSION['username'] == 'admin') { ?>
-                                        <td style="text-align: center">
+                                        <td style="text-align: center; padding-left: 40px;">
                                             <a href="?action=editroom&id=<?php echo $room['id'] ?>"
                                                 style="border: none; background-color: transparent;padding: 8px; color: #1572E8; font-weight: 600;">
                                                 <i class="fa-solid fa-pen-nib"></i> Edit
@@ -187,10 +201,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                                 </tr>
                                 <?php $i++; ?>
                             <?php } ?>
-
-
                         </table>
                     </div>
+
 
                     <script>
                         async function getRoomId(data) {
@@ -220,6 +233,33 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
                         }
 
                     </script>
+
+                    <div style="margin-top: 40px">
+                        <ul class="paginations">
+                            <?php if ($page > 1) { ?>
+                                <li class="">
+                                    <a class="page-l arrow" style=" margin-right: 8px;"
+                                        href="?page=<?php echo $page - 1 ?>">
+                                        <i class="fa-solid fa-caret-left" style="font-size: 16px"></i>
+                                    </a>
+                                </li>
+                            <?php } ?>
+
+                            <?php for ($i = 1; $i <= $pages; $i++) { ?>
+                                <li class="">
+                                    <a class="page-l <?php echo $page == $i ? "active-v" : "" ?> "
+                                        href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php } ?>
+                            <?php if ($page < $pages) { ?>
+                                <li class="<?php echo $page == $pages ? "disable" : "" ?> ">
+                                    <a class="page-l arrow" style=" margin-left: 8px;" href="?page=<?php echo $page + 1 ?>">
+                                        <i class="fa-solid fa-caret-right" style="font-size: 16px"></i>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
 
                 </div>
             </div>

@@ -147,49 +147,114 @@ class Room
 
     public function modify($input)
     {
-        $user_id = htmlspecialchars($input["id"]);
-        $username = htmlspecialchars($input["username"]);
-        $email = htmlspecialchars($input["email"]);
-        $address = htmlspecialchars($input["address"]);
+        $title = htmlspecialchars($input['title']);
+        $description = htmlspecialchars($input['description']);
+        $price = htmlspecialchars($input['price']);
+        $category_id = htmlspecialchars($input['category_id']);
+        $scale = htmlspecialchars($input['scale']);
+        $status = htmlspecialchars($input['status']);
+        $images = htmlspecialchars($input['images']);
+        $updated_at = date('Y-m-d H:i:s');
+        $this->id = htmlspecialchars($input['id']);
 
-        if (empty(trim($username))) {
-            return $this->error404("Please enter a username");
-        } elseif (empty(trim($email))) {
-            return $this->error404("Please enter an email");
-        } elseif (empty(trim($address))) {
-            return $this->error404("Please enter an address");
-        } else {
-            try {
-                $query = "UPDATE users SET username = ?, email = ?, address = ? WHERE id = ?";
-                $stmt = $this->connection->prepare($query);
-                $stmt->execute([$username, $email, $address, $user_id]);
-
-                $data = [
-                    "code" => 1,
-                    "status" => 201,
-                    "msg" => "User Updated Successfully!",
-                    'data' => [
-                        'id' => $user_id,
-                        'username' => $username,
-                        'email' => $email,
-                        'address' => $address
-                    ]
-                ];
-                http_response_code(201); // Set HTTP response code
-
-                return json_encode($data, JSON_PRETTY_PRINT);
-
-            } catch (PDOException $e) {
-                $data = [
-                    "code" => 0,
-                    "status" => 500,
-                    "msg" => "Internal Server Error: " . $e->getMessage()
-                ];
-                http_response_code(500); // Set HTTP response code
-
-                return json_encode($data, JSON_PRETTY_PRINT);
-            }
+        if (!$this->id) {
+            return $this->error404("Room not found");
         }
+        if (!$images) {
+            $query = "UPDATE $this->table_name SET 
+            title = ?,
+            description = ?, 
+            category_id = ?,
+            price =?, 
+            status =?, 
+            scale =?, 
+            updated_at =?
+            WHERE id = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([
+                $title,
+                $description,
+                $category_id,
+                $price,
+                $status,
+                $scale,
+                $updated_at,
+                $this->id
+            ]);
+
+            $data = [
+                "code" => 1,
+                "status" => 201,
+                "msg" => "Room Updated Successfully!",
+                'data' => [
+                    'id' => $this->id,
+                    'title' => $title,
+                    'description' => $description,
+                    'category_id' => $category_id,
+                    'price' => $price,
+                    'status' => $status,
+                    'scale' => $scale,
+                    'updated_at' => $updated_at,
+                ]
+            ];
+            http_response_code(201); // Set HTTP response code
+            return json_encode($data, JSON_PRETTY_PRINT);
+        }
+        try {
+            $query = "UPDATE $this->table_name SET 
+            title = ?,
+            description = ?, 
+            category_id = ?,
+            price =?, 
+            status =?, 
+            scale =?, 
+            images =?, 
+            updated_at =?
+            WHERE id = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([
+                $title,
+                $description,
+                $category_id,
+                $price,
+                $status,
+                $scale,
+                $images,
+                $updated_at,
+                $this->id
+            ]);
+
+            $data = [
+                "code" => 1,
+                "status" => 201,
+                "msg" => "User Updated Successfully!",
+                'data' => [
+                    'id' => $this->id,
+                    'title' => $title,
+                    'description' => $description,
+                    'category_id' => $category_id,
+                    'price' => $price,
+                    'status' => $status,
+                    'scale' => $scale,
+                    'images' => $images,
+                    'updated_at' => $updated_at,
+                ]
+            ];
+            http_response_code(201); // Set HTTP response code
+
+            return json_encode($data, JSON_PRETTY_PRINT);
+
+        } catch (PDOException $e) {
+            $data = [
+                "code" => 0,
+                "status" => 500,
+                "msg" => "Internal Server Error: " . $e->getMessage()
+            ];
+            http_response_code(500); // Set HTTP response code
+
+            return json_encode($data, JSON_PRETTY_PRINT);
+        }
+
     }
 
     public function delete()

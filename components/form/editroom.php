@@ -56,6 +56,7 @@ $images = explode(',', $room['images']);
                     <label for="title">Title:</label>
                     <input type="text" value="<?php echo $room['title'] ?>" id="title" name="title" class="input"
                         placeholder="Title">
+                    <input type="hidden" id="room_id" value="<?php echo $room['id'] ?>">
 
                     <label for="description">Description:</label>
                     <textarea id="description" name="description" rows="4" class="input" cols="50">
@@ -215,6 +216,7 @@ $images = explode(',', $room['images']);
             var category_id = document.getElementById('category').value;
             var price = document.getElementById('price').value;
             var scale_id = document.getElementById('capacity').value;
+            var room_id = document.getElementById('room_id').value;
             console.log(images, title, description, category_id, price, scale_id);
             // Validate form inputs
             if (title === "" || description === "" || category_id === "" || price === "" || scale_id === "") {
@@ -244,10 +246,12 @@ $images = explode(',', $room['images']);
             const formdata = new FormData();
             formdata.append("title", title);
             formdata.append("description", description);
-            formdata.append("category_id", category_id);
             formdata.append("price", price);
+            formdata.append("category_id", category_id);
             formdata.append("scale", scale_id);
+            formdata.append("status", "1");
             formdata.append("images", images);
+            formdata.append("id", room_id);
 
             const requestOptions = {
                 method: "POST",
@@ -256,15 +260,13 @@ $images = explode(',', $room['images']);
             };
 
             try {
-                const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/room/create.php", requestOptions);
+                const response = await fetch("http://localhost/assignment/oscar-backend/_backend/api/room/update.php", requestOptions);
                 const result = await response.json();
                 if (result.code == 1) {
-                    alert("Room created successfully");
-                    window.location.href = "?action=success";
+                    window.location.href = "?action=list";
                 }
+                console.log(result)
             } catch (error) {
-                alert("Error creating room");
-                window.location.href = "?action";
                 console.error(error);
             };
         })
